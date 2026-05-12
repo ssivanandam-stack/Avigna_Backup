@@ -1,0 +1,13 @@
+//for the deployement!
+
+bash# Daily work — code on main as usual
+git checkout main
+# ... make changes ...
+git add .
+git commit -m "feat: whatever you built"
+git push origin main
+
+# When ready to ship to production:
+git checkout production
+git merge main
+git push origin production 

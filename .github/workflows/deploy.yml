@@ -1,0 +1,207 @@
+name: Deploy to EC2 (Production)
+
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch: # allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy backend to AWS EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      # ─── 1. Checkout code (so we can read commit info) ─────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # ─── 2. Capture commit metadata for notifications ──────────────
+      - name: Capture commit info
+        id: commit
+        run: |
+          echo "message=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
+
+      # ─── 3. SSH into EC2 and run the deploy script ─────────────────
+      - name: Deploy to EC2 via SSH
+        id: deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -e   # exit immediately if any command fails
+
+            echo "📂 Navigating to project directory..."
+            cd ${{ secrets.EC2_PROJECT_PATH }}
+
+            echo "🔄 Resetting any local changes..."
+            # Backup .env before reset (it's not in git but exists locally)
+            cp .env /tmp/.env.deploy.backup 2>/dev/null || true
+            git reset --hard HEAD
+            git clean -fd
+            # Restore .env after reset
+            cp /tmp/.env.deploy.backup .env 2>/dev/null || true
+
+            echo "⬇️  Pulling latest code from production branch..."
+            git fetch origin production
+            git checkout production
+            git pull origin production
+
+            echo "📦 Installing dependencies..."
+            npm ci --omit=dev || npm install --omit=dev
+
+            echo "♻️  Restarting PM2 process..."
+            pm2 restart avighna-api --update-env
+            pm2 save
+
+            echo "✅ Verifying app is online..."
+            sleep 3
+            pm2 describe avighna-api | grep -E "status|uptime" || true
+
+            # Health check — fail the workflow if /api/health doesn't respond
+            HEALTH=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5002/api/health || echo "000")
+            if [ "$HEALTH" != "200" ]; then
+              echo "❌ Health check failed (HTTP $HEALTH)"
+              exit 1
+            fi
+            echo "✅ Health check passed (HTTP $HEALTH)"
+
+            echo "🎉 Deployment completed successfully!"
+
+      # ─── 4. Notify by Email — SUCCESS ──────────────────────────────
+      - name: Send Email — Success
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "✅ Avighna Backend Deployed — ${{ steps.commit.outputs.sha }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: "Avighna Deploy Bot <${{ secrets.MAIL_USERNAME }}>"
+          html_body: |
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;background:#f7f7f7;padding:40px 20px;">
+              <div style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                <div style="background:#0d9f6e;padding:32px 40px;color:#fff;">
+                  <h1 style="margin:0;font-size:24px;font-weight:700;">✅ Deployment Successful</h1>
+                  <p style="margin:8px 0 0;opacity:0.9;font-size:14px;">Avighna Backend is live on production</p>
+                </div>
+                <div style="padding:32px 40px;">
+                  <table width="100%" cellpadding="8" cellspacing="0" style="font-size:14px;">
+                    <tr>
+                      <td style="color:#666;width:35%;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Repository</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ github.repository }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Branch</strong></td>
+                      <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;"><code style="background:#f0fdf9;color:#0d9f6e;padding:2px 8px;border-radius:4px;">${{ github.ref_name }}</code></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Commit</strong></td>
+                      <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;"><code style="background:#fafafa;padding:2px 8px;border-radius:4px;">${{ steps.commit.outputs.sha }}</code></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Message</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ steps.commit.outputs.message }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Deployed by</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ github.actor }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;"><strong>Timestamp</strong></td>
+                      <td style="color:#111;padding:10px 0;">${{ steps.commit.outputs.timestamp }}</td>
+                    </tr>
+                  </table>
+                  <div style="margin-top:24px;padding:16px;background:#f0fdf9;border-left:4px solid #0d9f6e;border-radius:0 8px 8px 0;">
+                    <p style="margin:0;color:#111;font-size:14px;">
+                      <strong>Health check passed.</strong> Your API is live and responding at <code>/api/health</code>.
+                    </p>
+                  </div>
+                  <p style="margin:24px 0 0;font-size:13px;color:#999;">
+                    <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" style="color:#0d9f6e;text-decoration:none;">View workflow run →</a>
+                  </p>
+                </div>
+                <div style="background:#fafafa;padding:20px 40px;border-top:1px solid #f0f0f0;color:#999;font-size:12px;">
+                  Avighna Holistic Care • Automated Deployment Notification
+                </div>
+              </div>
+            </div>
+
+      # ─── 5. Notify by Email — FAILURE ──────────────────────────────
+      - name: Send Email — Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "❌ Avighna Backend Deploy FAILED — ${{ steps.commit.outputs.sha }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: "Avighna Deploy Bot <${{ secrets.MAIL_USERNAME }}>"
+          html_body: |
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;background:#f7f7f7;padding:40px 20px;">
+              <div style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                <div style="background:#dc2626;padding:32px 40px;color:#fff;">
+                  <h1 style="margin:0;font-size:24px;font-weight:700;">❌ Deployment Failed</h1>
+                  <p style="margin:8px 0 0;opacity:0.9;font-size:14px;">Action required — check the logs</p>
+                </div>
+                <div style="padding:32px 40px;">
+                  <table width="100%" cellpadding="8" cellspacing="0" style="font-size:14px;">
+                    <tr>
+                      <td style="color:#666;width:35%;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Repository</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ github.repository }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Branch</strong></td>
+                      <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;"><code style="background:#fef2f2;color:#dc2626;padding:2px 8px;border-radius:4px;">${{ github.ref_name }}</code></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Commit</strong></td>
+                      <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;"><code style="background:#fafafa;padding:2px 8px;border-radius:4px;">${{ steps.commit.outputs.sha }}</code></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Message</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ steps.commit.outputs.message }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;border-bottom:1px solid #f0f0f0;"><strong>Triggered by</strong></td>
+                      <td style="color:#111;padding:10px 0;border-bottom:1px solid #f0f0f0;">${{ github.actor }}</td>
+                    </tr>
+                    <tr>
+                      <td style="color:#666;padding:10px 0;"><strong>Timestamp</strong></td>
+                      <td style="color:#111;padding:10px 0;">${{ steps.commit.outputs.timestamp }}</td>
+                    </tr>
+                  </table>
+                  <div style="margin-top:24px;padding:16px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:0 8px 8px 0;">
+                    <p style="margin:0 0 8px;color:#111;font-size:14px;">
+                      <strong>The deployment failed.</strong> Common causes:
+                    </p>
+                    <ul style="margin:8px 0 0;padding-left:20px;color:#555;font-size:13px;line-height:1.7;">
+                      <li>SSH connection issue</li>
+                      <li>npm install failure</li>
+                      <li>Health check didn't return HTTP 200</li>
+                      <li>PM2 restart failed</li>
+                    </ul>
+                  </div>
+                  <p style="margin:24px 0 0;font-size:14px;">
+                    <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" style="display:inline-block;background:#dc2626;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;">View Logs →</a>
+                  </p>
+                </div>
+                <div style="background:#fafafa;padding:20px 40px;border-top:1px solid #f0f0f0;color:#999;font-size:12px;">
+                  Avighna Holistic Care • Automated Deployment Notification
+                </div>
+              </div>
+            </div>

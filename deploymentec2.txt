@@ -1,0 +1,136 @@
+Phase 1: Accessing the Server (SSH)
+Before connecting, make sure your key file has the right security permissions. Keep the quotes around the file name to handle any spaces!
+
+Bash
+# 1. Secure the key file (only needs to be done once)
+chmod 400 "Avighna Backend.pem"
+
+# 2. Log into the AWS EC2 server
+ssh -i "Avighna Backend.pem" ubuntu@<your-ec2-public-ip>
+Phase 2: Preparing the Server & Code
+Once you see the ubuntu@ip-...:~$ prompt, you are inside the server.
+
+Bash
+# 1. Update the server's OS packages
+sudo apt update --fix-missing && sudo apt upgrade -y
+
+# 2. Install Node.js (v20) and Git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs git
+
+# 3. Clone your repository (use your GITHUB_TOKEN as the password)
+git clone https://github.com/your-username/your-repo-name.git
+
+# 4. Move into the project folder
+cd your-repo-name
+
+# 5. Install the project dependencies
+npm install
+Phase 3: The Environment Variables
+Your app needs its secret keys to talk to MongoDB Atlas and AWS S3/SES.
+
+Bash
+# 1. Create and open the hidden .env file
+nano .env
+Paste your variables (PORT=5002, MONGO_URI, AWS_REGION, etc.) into the editor.
+
+Save: Ctrl + X
+
+Confirm: Y
+
+Exit: Enter
+
+Phase 4: Keeping it Alive (PM2)
+PM2 ensures your Node app runs continuously in the background and restarts if it crashes. Make sure you run these while inside your project folder!
+
+Bash
+# 1. Install PM2 globally on the server
+sudo npm install -g pm2
+
+# 2. Start your backend
+pm2 start src/server.js --name "avighna-api"
+
+# 3. Generate the startup script (so it boots if AWS restarts)
+pm2 startup
+CRITICAL: Step 3 will output a command starting with sudo env PATH=$PATH... at the bottom of your terminal. You must copy that exact command and run it!
+
+Bash
+# 4. Save the PM2 configuration permanently
+pm2 save
+Phase 5: Routing Web Traffic (Nginx)
+Your app is running on Port 5002, but the internet knocks on Port 80. Nginx connects the two.
+
+Bash
+# 1. Install Nginx
+sudo apt install -y nginx
+
+# 2. Open the default configuration file
+sudo nano /etc/nginx/sites-available/default
+Delete everything inside that file and paste this exact block:
+
+Nginx
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:5002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+Save and exit (Ctrl + X, then Y, then Enter).
+
+Bash
+# 3. Test the Nginx syntax to make sure there are no typos
+sudo nginx -t
+
+# 4. Restart Nginx to apply the changes
+sudo systemctl restart nginx
+Phase 6: Everyday Maintenance Commands
+Keep these handy for when you need to push updates or check on the server later.
+
+PM2 (App Management)
+
+pm2 status : See if your app is online and how much memory it is using.
+
+pm2 logs avighna-api : Watch your live console logs (great for debugging errors).
+
+pm2 restart avighna-api : Restart the app (do this every time you change the .env file or pull new code).
+
+pm2 stop avighna-api : Temporarily shut down the backend.
+
+Git (Updating Code)
+When you push new code from your Mac to GitHub, log into the server and run:
+
+Bash
+cd your-repo-name
+git pull
+npm install
+pm2 restart avighna-api
+
+
+
+
+
+
+
+
+
+
+//for the deployement!
+
+bash# Daily work — code on main as usual
+git checkout main
+# ... make changes ...
+git add .
+git commit -m "feat: whatever you built"
+git push origin main
+
+# When ready to ship to production:
+git checkout production
+git merge main
+git push origin production 

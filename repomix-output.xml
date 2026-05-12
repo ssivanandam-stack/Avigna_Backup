@@ -1,0 +1,3771 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+scripts/
+  createAdmin.js
+  createReviews.js
+src/
+  config/
+    aws.config.js
+    db.config.js
+    nodemailer.config.js
+  controllers/
+    application.controller.js
+    auth.controller.js
+    blog.controller.js
+    career.controller.js
+    inquiry.controller.js
+    prescreen.controller.js
+    product.controller.js
+    resource.controller.js
+    review.controller.js
+  jobs/
+    cleanupExpiredResumes.js
+  middlewares/
+    auth.middleware.js
+    error.middleware.js
+    upload.middleware.js
+    validate.middleware.js
+  models/
+    Application.js
+    Blog.js
+    Career.js
+    Inquiry.js
+    PrescreenQuestion.js
+    Product.js
+    Resource.js
+    Review.js
+    User.js
+  routes/
+    application.routes.js
+    auth.routes.js
+    blog.routes.js
+    career.routes.js
+    index.js
+    inquiry.routes.js
+    prescreen.routes.js
+    product.routes.js
+    resource.routes.js
+    review.routes.js
+  services/
+    career-email.service.js
+    email.service.js
+    recaptcha.service.js
+    s3.service.js
+  utils/
+    ApiError.js
+    ApiResponse.js
+    catchAsync.js
+  validations/
+    career.validation.js
+    inquiry.validation.js
+    review.validation.js
+  app.js
+  server.js
+.gitignore
+deploymentec2.txt
+package.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="scripts/createReviews.js">
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Review from "../src/models/Review.js";
+
+dotenv.config();
+
+const reviewsData = [
+  {
+    providerName: "Myracle Clay-Bennett",
+    providerRole: "Therapist",
+    firstName: "Alicia",
+    lastName: "Carr",
+    email: "alicia.carr@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Myracle Clay-Bennett is simply a miracle!! Her professionalism and approach to all my needs has surpassed anything that I could ever expect from a therapist. She has left a remarkable impact on my life and I am forever grateful for finding my perfect therapist!!!",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "Melody",
+    lastName: "Fain",
+    email: "melody.fain@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "It's difficult to find a good mental health office that accepts insurance and doesn't have a months-long waiting list. This office was so easy to work with and schedule my initial appointment. Someone actually answered the phone, which is very rare. Highly recommend!",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "VJ",
+    lastName: "Krish",
+    email: "vj.krish@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "When I visited the US with family, we were going through some emotional issues during our stay and so we wanted to take help from a mental health clinic. We were nervous, but some of our friends recommended Avighna Holistic Care and they were wonderful.",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "Shankar",
+    lastName: "Ramanathan",
+    email: "shankar.r@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Avighna Holistic Care is excellent. The team is professional, compassionate, and offers a variety of services. The therapists provide personalized care, and the staff is supportive to create a welcoming environment. Highly recommend for mental health support.",
+  },
+  {
+    providerName: "Rasheedah Fletcher",
+    providerRole: "Clinician",
+    firstName: "Jasmine",
+    lastName: "Edwards",
+    email: "jasmine.edwards@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Ms. Fletcher (Rasheedah) is an amazing clinician. She listens to her clients and is always willing to answer questions. Not only does she counsel adults but she works with children too! I know in this area, it can be difficult to find clinicians that will work with children/adolescents and have availability.",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Therapist",
+    firstName: "Alisha",
+    lastName: "Diggs",
+    email: "alisha.diggs@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "My son has been going to Avighna Holistic Care for about 2 months now. He loves to go and be able to talk to someone about what’s going on in life, and not being judged. His therapist is such an amazing person and she communicates his needs perfectly.",
+  },
+  {
+    providerName: "Sam",
+    providerRole: "Therapist",
+    firstName: "Robin",
+    lastName: "C",
+    email: "robin.c@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "I highly recommend Avighna. The Therapists, including Sam, are all committed to providing high quality care. The office is soothing and does not look clinical at all. You do not have to wait weeks or months to get in.",
+  },
+  {
+    providerName: "Myracle Clay-Bennett",
+    providerRole: "Therapist",
+    firstName: "Makeba",
+    lastName: "Story",
+    email: "makeba.story@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Myracle is the best therapist available. If you are in the area please choose her! She listens to everything that you say, and offers an avenue where you feel like you can let your guard down and be your authentic self. Highly recommend!",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "BJ",
+    lastName: "Durham",
+    email: "bj.durham@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Avighna Holistic Care had a great open house! The staff was very welcoming and the space was inviting. Everything seemed to be designed intentionally to allow for a space of peace and serenity.",
+  },
+  {
+    providerName: "Rasheedah Fletcher",
+    providerRole: "Therapist",
+    firstName: "Jessica",
+    lastName: "OBerto",
+    email: "jessica.oberto@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Quality counselors who are person-centered and respect their clients for who they are! Rasheedah is an amazing therapist and counselor who makes you feel seen, is creative in her approach and works from an equitable lens.",
+  },
+  {
+    providerName: "Rasheedah Fletcher",
+    providerRole: "Counselor",
+    firstName: "Lakia",
+    lastName: "Holliday",
+    email: "lakia.holliday@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Ms. Fletcher stands out as an exemplary counselor, consistently demonstrating a deep commitment to student well-being and academic success. She is known for her approachable demeanor, making students feel comfortable and supported.",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "Zorayda",
+    lastName: "Rodriguez",
+    email: "zorayda.rodriguez@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Avighna Holistic Care is great. They offer a variety of counseling services. The office is very warm and inviting.",
+  },
+  {
+    providerName: "Ana",
+    providerRole: "Therapist",
+    firstName: "Aaron",
+    lastName: "Krah",
+    email: "aaron.krah@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "I highly recommend Ana! She has a wealth of information and experience and never makes you feel rushed. If it’s your first time trying therapy or you’re just looking to start back again, ASK FOR ANA!!",
+  },
+  {
+    providerName: "Rasheedah Fletcher",
+    providerRole: "Therapist",
+    firstName: "Destiny",
+    lastName: "Johnson",
+    email: "destiny.johnson@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Rasheedah is a great listener and provides solid, unbiased feedback. She is a huge advocate for mental health and wellbeing.",
+  },
+  {
+    providerName: "Leadership",
+    providerRole: "Clinic",
+    firstName: "Janice",
+    lastName: "Eisele",
+    email: "janice.eisele@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback: "Incredible leadership and compassionate care.",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "Muyiwa",
+    lastName: "Adeyeye",
+    email: "muyiwa.adeyeye@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Avighna was so welcoming and the staff provided a warm experience. I appreciate the time I took talking with all of them. They are awesome!!",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Providers",
+    firstName: "Emily",
+    lastName: "Allen",
+    email: "emily.allen@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback: "Great providers and a very welcoming space!",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinic",
+    firstName: "Latarsha",
+    lastName: "S",
+    email: "latarsha.s@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback: "Beautiful facility. Gentle and kind staff.",
+  },
+  {
+    providerName: "General Staff",
+    providerRole: "Clinicians",
+    firstName: "Alice",
+    lastName: "Okamoto",
+    email: "alice.okamoto@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback: "Friendly and compassionate group of clinicians!",
+  },
+  {
+    providerName: "Sarah",
+    providerRole: "Therapist",
+    firstName: "J",
+    lastName: "Green",
+    email: "j.green@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "I always look forward to my sessions with Sarah. She's been a huge help and is an excellent therapist.",
+  },
+  {
+    providerName: "Charday",
+    providerRole: "Therapist",
+    firstName: "Emily",
+    lastName: "Evans",
+    email: "emily.evans@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Charday is the best. She has helped me so much and I can't imagine having another therapist!",
+  },
+  {
+    providerName: "Jason",
+    providerRole: "Counselor",
+    firstName: "Mike",
+    lastName: "Bickford",
+    email: "mike.bickford@example.com",
+    wouldRecommend: true,
+    rating: 5,
+    status: "pending",
+    feedback:
+      "Jason is a great counselor. I like his approach and how he finds ways to help me.",
+  },
+];
+
+const seedReviews = async () => {
+  try {
+    // Connect to your MongoDB
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB...");
+
+    // Insert all reviews into the database
+    await Review.insertMany(reviewsData);
+
+    console.log(
+      `Successfully added ${reviewsData.length} reviews to the database!`,
+    );
+    console.log("You can now approve them from your admin panel.");
+
+    process.exit(0);
+  } catch (error) {
+    console.error("Error seeding reviews:", error);
+    process.exit(1);
+  }
+};
+
+seedReviews();
+</file>
+
+<file path="src/config/aws.config.js">
+import { S3Client } from "@aws-sdk/client-s3";
+import { SESClient } from "@aws-sdk/client-ses";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const awsConfig = {
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+};
+
+// Initialize S3 Client for uploads (Resources, Blogs, Products)
+export const s3Client = new S3Client(awsConfig);
+
+// Initialize SES Client for sending emails (Contact Inquiries)
+export const sesClient = new SESClient(awsConfig);
+</file>
+
+<file path="src/config/db.config.js">
+import mongoose from "mongoose";
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    process.exit(1); // Stop the server if the database fails to connect
+  }
+};
+
+export default connectDB;
+</file>
+
+<file path="src/config/nodemailer.config.js">
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Create reusable transporter using SMTP
+// Supports Gmail, Outlook, custom SMTP, etc.
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.SMTP_PORT) || 587,
+  secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+// Verify connection on startup (non-blocking)
+transporter.verify((error) => {
+  if (error) {
+    console.warn("⚠️  SMTP connection failed:", error.message);
+    console.warn("   Career emails will not be sent until SMTP is configured.");
+  } else {
+    console.log("✅ SMTP mail server connected & ready");
+  }
+});
+
+export default transporter;
+</file>
+
+<file path="src/controllers/auth.controller.js">
+import User from "../models/User.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+
+export const loginAdmin = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new ApiError(400, "Please provide email and password");
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new ApiError(401, "Incorrect email or password");
+  }
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { token, name: user.name }, "Login successful"));
+});
+</file>
+
+<file path="src/controllers/prescreen.controller.js">
+// src/controllers/prescreen.controller.js
+import PrescreenQuestion from "../models/PrescreenQuestion.js";
+import Career from "../models/Career.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+
+// ─── PUBLIC ──────────────────────────────────────────────────────────
+
+// @desc    Get all prescreen questions attached to a specific job (for the application form)
+// @route   GET /api/prescreen/job/:jobId
+// @access  Public
+export const getQuestionsForJob = catchAsync(async (req, res) => {
+  const career = await Career.findOne({
+    _id: req.params.jobId,
+    isActive: true,
+  }).populate({
+    path: "prescreenQuestions",
+    match: { isActive: true },
+  });
+
+  if (!career) {
+    throw new ApiError(404, "Job posting not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, career.prescreenQuestions, "Questions fetched"));
+});
+
+// ─── ADMIN ───────────────────────────────────────────────────────────
+
+// @desc    Get all questions in the global bank
+// @route   GET /api/prescreen
+// @access  Private (Admin)
+export const getAllQuestions = catchAsync(async (req, res) => {
+  const { category } = req.query;
+  const filter = { isActive: true };
+  if (category) filter.category = category;
+
+  const questions = await PrescreenQuestion.find(filter).sort({
+    createdAt: -1,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, questions, "All prescreen questions fetched"));
+});
+
+// @desc    Create a new question in the bank
+// @route   POST /api/prescreen
+// @access  Private (Admin)
+export const createQuestion = catchAsync(async (req, res) => {
+  const { text, type, isRequired, category, yesNoOptions, selectOptions } =
+    req.body;
+
+  if (!text || !type) {
+    throw new ApiError(400, "Question text and type are required");
+  }
+
+  const question = await PrescreenQuestion.create({
+    text,
+    type,
+    isRequired: isRequired !== undefined ? isRequired : true,
+    category: category || "General",
+    yesNoOptions:
+      type === "yes_no"
+        ? yesNoOptions || [
+            { label: "Yes", score: 10, isKnockout: false },
+            { label: "No", score: 0, isKnockout: false },
+          ]
+        : [],
+    selectOptions: type === "select" ? selectOptions || [] : [],
+  });
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, question, "Question created successfully"));
+});
+
+// @desc    Update a question in the bank
+// @route   PUT /api/prescreen/:id
+// @access  Private (Admin)
+export const updateQuestion = catchAsync(async (req, res) => {
+  const question = await PrescreenQuestion.findById(req.params.id);
+  if (!question) throw new ApiError(404, "Question not found");
+
+  const allowed = [
+    "text",
+    "type",
+    "isRequired",
+    "category",
+    "yesNoOptions",
+    "selectOptions",
+    "isActive",
+  ];
+  allowed.forEach((field) => {
+    if (req.body[field] !== undefined) question[field] = req.body[field];
+  });
+
+  await question.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, question, "Question updated successfully"));
+});
+
+// @desc    Soft-delete a question
+// @route   DELETE /api/prescreen/:id
+// @access  Private (Admin)
+export const deleteQuestion = catchAsync(async (req, res) => {
+  const question = await PrescreenQuestion.findById(req.params.id);
+  if (!question) throw new ApiError(404, "Question not found");
+
+  question.isActive = false;
+  await question.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Question archived successfully"));
+});
+
+// @desc    Attach questions to a job posting (replace the whole set)
+// @route   PUT /api/prescreen/job/:jobId/questions
+// @access  Private (Admin)
+export const setJobQuestions = catchAsync(async (req, res) => {
+  const { questionIds } = req.body; // ordered array of PrescreenQuestion IDs
+
+  if (!Array.isArray(questionIds)) {
+    throw new ApiError(400, "questionIds must be an array");
+  }
+
+  if (questionIds.length > 5) {
+    throw new ApiError(
+      400,
+      "A job posting can have a maximum of 5 prescreen questions",
+    );
+  }
+
+  const career = await Career.findById(req.params.jobId);
+  if (!career) throw new ApiError(404, "Job posting not found");
+
+  career.prescreenQuestions = questionIds;
+  await career.save();
+
+  const populated = await Career.findById(req.params.jobId).populate(
+    "prescreenQuestions",
+  );
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        populated.prescreenQuestions,
+        "Questions updated for job posting",
+      ),
+    );
+});
+
+// ─── SEED ────────────────────────────────────────────────────────────
+
+/**
+ * @desc    Seed the global question bank with all questions from the CareerPlug screenshots
+ * @route   POST /api/prescreen/seed
+ * @access  Private (Admin) — run once, then disable or remove
+ */
+export const seedQuestions = catchAsync(async (req, res) => {
+  // Prevent duplicate seeding
+  const existing = await PrescreenQuestion.countDocuments();
+  if (existing > 0) {
+    return res
+      .status(400)
+      .json(
+        new ApiResponse(
+          400,
+          null,
+          `Question bank already has ${existing} questions. Clear it first or skip seeding.`,
+        ),
+      );
+  }
+
+  const questions = [
+    // ── Basic Requirements ──────────────────────────────────────────
+    {
+      text: "Are you legally authorized to work in the US?",
+      type: "yes_no",
+      isRequired: true,
+      category: "Basic Requirements",
+      yesNoOptions: [
+        { label: "Yes", score: 10, isKnockout: false },
+        { label: "No", score: 0, isKnockout: true }, // must be authorized
+      ],
+    },
+
+    // ── Licensure ───────────────────────────────────────────────────
+    {
+      text: "Is your licensure LCAS?",
+      type: "yes_no",
+      isRequired: true,
+      category: "Licensure",
+      yesNoOptions: [
+        { label: "Yes", score: 10, isKnockout: false },
+        { label: "No", score: 1, isKnockout: false },
+      ],
+    },
+    {
+      text: "What licensure do you currently hold?",
+      type: "open",
+      isRequired: true,
+      category: "Licensure",
+    },
+
+    // ── Experience ──────────────────────────────────────────────────
+    {
+      text: "Years of mental health experience",
+      type: "open",
+      isRequired: true,
+      category: "Experience",
+    },
+    {
+      text: "Years of Supervisory Experience",
+      type: "open",
+      isRequired: true,
+      category: "Experience",
+    },
+
+    // ── Compensation ────────────────────────────────────────────────
+    {
+      text: "What are your salary expectations?",
+      type: "open",
+      isRequired: false,
+      category: "Compensation",
+    },
+    {
+      text: "What are your compensation expectations?",
+      type: "open",
+      isRequired: false,
+      category: "Compensation",
+    },
+
+    // ── Availability ────────────────────────────────────────────────
+    {
+      text: "Are you available to work evenings or weekends if needed?",
+      type: "yes_no",
+      isRequired: false,
+      category: "Availability",
+      yesNoOptions: [
+        { label: "Yes", score: 5, isKnockout: false },
+        { label: "No", score: 0, isKnockout: false },
+      ],
+    },
+    {
+      text: "What is your earliest available start date?",
+      type: "open",
+      isRequired: false,
+      category: "Availability",
+    },
+
+    // ── Practice Fit ────────────────────────────────────────────────
+    {
+      text: "Do you have experience working with substance abuse clients?",
+      type: "yes_no",
+      isRequired: false,
+      category: "Practice Fit",
+      yesNoOptions: [
+        { label: "Yes", score: 8, isKnockout: false },
+        { label: "No", score: 0, isKnockout: false },
+      ],
+    },
+    {
+      text: "Are you comfortable working with a telehealth platform?",
+      type: "yes_no",
+      isRequired: false,
+      category: "Practice Fit",
+      yesNoOptions: [
+        { label: "Yes", score: 5, isKnockout: false },
+        { label: "No", score: 0, isKnockout: false },
+      ],
+    },
+    {
+      text: "Do you have experience with IOP (Intensive Outpatient Programs)?",
+      type: "yes_no",
+      isRequired: false,
+      category: "Practice Fit",
+      yesNoOptions: [
+        { label: "Yes", score: 8, isKnockout: false },
+        { label: "No", score: 0, isKnockout: false },
+      ],
+    },
+    {
+      text: "What therapeutic modalities are you trained in?",
+      type: "open",
+      isRequired: false,
+      category: "Practice Fit",
+    },
+    {
+      text: "Why are you interested in working at Avighna Holistic Care?",
+      type: "open",
+      isRequired: false,
+      category: "Practice Fit",
+    },
+  ];
+
+  const created = await PrescreenQuestion.insertMany(questions);
+
+  res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        created,
+        `Successfully seeded ${created.length} prescreen questions`,
+      ),
+    );
+});
+</file>
+
+<file path="src/controllers/review.controller.js">
+import Review from "../models/Review.js";
+import { catchAsync } from "../utils/catchAsync.js";
+
+// @desc    Submit a new patient review
+// @route   POST /api/reviews
+// @access  Public
+export const createReview = catchAsync(async (req, res, next) => {
+  const {
+    providerName,
+    providerRole,
+    firstName,
+    lastName,
+    email,
+    wouldRecommend,
+    feedback,
+    rating,
+  } = req.body;
+
+  const review = await Review.create({
+    providerName,
+    providerRole,
+    firstName,
+    lastName,
+    email,
+    wouldRecommend,
+    feedback,
+    rating,
+    // Automatically hide negative feedback; queue positive feedback for admin approval
+    status: wouldRecommend ? "pending" : "private",
+  });
+
+  res.status(201).json({
+    status: "success",
+    message: "Review submitted successfully. Thank you for your feedback.",
+  });
+});
+
+// @desc    Get all approved reviews for the public website
+// @route   GET /api/reviews
+// @access  Public
+export const getApprovedReviews = catchAsync(async (req, res, next) => {
+  // Only fetch reviews that an admin has manually marked as 'approved'
+  const reviews = await Review.find({ status: "approved" }).sort({
+    createdAt: -1,
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: reviews.length,
+    data: reviews,
+  });
+});
+
+// @desc    Get ALL reviews (Admin only - sees pending, private, and approved)
+// @route   GET /api/reviews/admin
+// @access  Private/Admin
+export const getAllReviews = catchAsync(async (req, res, next) => {
+  const reviews = await Review.find().sort({ createdAt: -1 });
+
+  res.status(200).json({
+    status: "success",
+    results: reviews.length,
+    data: reviews,
+  });
+});
+
+// @desc    Update review status
+// @route   PATCH /api/reviews/:id/status
+// @access  Private/Admin
+export const updateReviewStatus = catchAsync(async (req, res, next) => {
+  const { status } = req.body;
+
+  if (!['pending', 'approved', 'private'].includes(status)) {
+    return res.status(400).json({ status: 'error', message: 'Invalid status' });
+  }
+
+  const review = await Review.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    message: `Review marked as ${status}`,
+    data: review,
+  });
+});
+</file>
+
+<file path="src/jobs/cleanupExpiredResumes.js">
+import cron from "node-cron";
+import Application from "../models/Application.js";
+import { deleteFileFromS3 } from "../services/s3.service.js";
+import {
+  sendStatusRejected,
+  sendResumeExpiryNotice,
+} from "../services/career-email.service.js";
+
+/**
+ * Cleanup expired resumes
+ *
+ * Runs daily at 2:00 AM.
+ * Finds applications where:
+ *   - resumeExpiresAt has passed
+ *   - resumeDeleted is still false
+ *
+ * For each expired application:
+ *   1. Delete resume from S3
+ *   2. If status is still "applied" or "reviewing" (never got a decision),
+ *      send polite rejection email first
+ *   3. Send data retention / resume expiry notice
+ *   4. Mark resumeDeleted = true
+ */
+const startResumeCleanupJob = () => {
+  // Run every day at 2:00 AM server time
+  cron.schedule("0 2 * * *", async () => {
+    console.log("🕐 [Cron] Starting expired resume cleanup...");
+
+    try {
+      const expiredApplications = await Application.find({
+        resumeExpiresAt: { $lte: new Date() },
+        resumeDeleted: false,
+      }).populate("job", "title");
+
+      if (expiredApplications.length === 0) {
+        console.log("✅ [Cron] No expired resumes found. All clean.");
+        return;
+      }
+
+      console.log(
+        `📋 [Cron] Found ${expiredApplications.length} expired resume(s) to process.`,
+      );
+
+      let deletedCount = 0;
+      let emailsSent = 0;
+
+      for (const app of expiredApplications) {
+        const applicantName = `${app.firstName} ${app.lastName}`;
+        const jobTitle = app.job?.title || "the applied position";
+
+        try {
+          // If they never got a decision, send rejection email first
+          if (["applied", "reviewing"].includes(app.status)) {
+            try {
+              await sendStatusRejected({
+                to: app.email,
+                applicantName,
+                jobTitle,
+              });
+              emailsSent++;
+
+              // Update status to rejected
+              app.status = "rejected";
+              app.statusHistory.push({
+                status: "rejected",
+                note: "Auto-rejected: 30-day retention period expired without a decision",
+                changedAt: new Date(),
+              });
+            } catch (emailErr) {
+              console.error(
+                `  ⚠️  Rejection email failed for ${app.email}:`,
+                emailErr.message,
+              );
+            }
+          }
+
+          // Send resume expiry notice
+          try {
+            await sendResumeExpiryNotice({
+              to: app.email,
+              applicantName,
+              jobTitle,
+            });
+            emailsSent++;
+          } catch (emailErr) {
+            console.error(
+              `  ⚠️  Expiry notice email failed for ${app.email}:`,
+              emailErr.message,
+            );
+          }
+
+          // Delete resume from S3
+          const deleted = await deleteFileFromS3(app.resumeS3Key);
+
+          // Mark as deleted regardless (we don't want to keep retrying)
+          app.resumeDeleted = true;
+          app.resumeUrl = ""; // Clear the URL since it's no longer valid
+          await app.save();
+
+          if (deleted) deletedCount++;
+
+          console.log(`  ✅ Processed: ${applicantName} (${app.email})`);
+        } catch (appErr) {
+          console.error(
+            `  ❌ Error processing application ${app._id}:`,
+            appErr.message,
+          );
+        }
+      }
+
+      console.log(
+        `🏁 [Cron] Cleanup complete. Deleted: ${deletedCount}/${expiredApplications.length} resumes, Emails sent: ${emailsSent}`,
+      );
+    } catch (error) {
+      console.error("❌ [Cron] Resume cleanup job failed:", error.message);
+    }
+  });
+
+  console.log("📅 Resume cleanup cron job scheduled (daily at 2:00 AM)");
+};
+
+export default startResumeCleanupJob;
+</file>
+
+<file path="src/middlewares/auth.middleware.js">
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import { ApiError } from "../utils/ApiError.js";
+import { catchAsync } from "../utils/catchAsync.js";
+
+export const protect = catchAsync(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token)
+    throw new ApiError(
+      401,
+      "You are not logged in. Please log in to get access.",
+    );
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const currentUser = await User.findById(decoded.id);
+
+  if (!currentUser)
+    throw new ApiError(
+      401,
+      "The user belonging to this token no longer exists.",
+    );
+
+  req.user = currentUser;
+  next();
+});
+</file>
+
+<file path="src/middlewares/upload.middleware.js">
+import multer from "multer";
+// Store file in memory so we can push it directly to AWS S3 without saving to disk
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
+</file>
+
+<file path="src/middlewares/validate.middleware.js">
+import { ApiError } from "../utils/ApiError.js";
+
+export const validate = (schema) => (req, res, next) => {
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errorMessage = error.details
+      .map((details) => details.message)
+      .join(", ");
+    return next(new ApiError(400, errorMessage));
+  }
+  next();
+};
+</file>
+
+<file path="src/models/Blog.js">
+import mongoose from "mongoose";
+
+const blogSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    excerpt: {
+      type: String,
+      required: true,
+      maxLength: 300,
+    },
+    content: {
+      type: String, // Can store HTML or Markdown from your CMS
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    tags: [String],
+    coverImageUrl: {
+      type: String, // Will point to an AWS S3 URL
+      required: true,
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("Blog", blogSchema);
+</file>
+
+<file path="src/models/Inquiry.js">
+import mongoose from "mongoose";
+
+const inquirySchema = new mongoose.Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String },
+    patientStatus: {
+      type: String,
+      required: true,
+      enum: ["new", "existing", "referral"],
+    },
+    contactReason: { type: String, required: true },
+    clinician: { type: String }, // Optional, only if 'new' or 'existing'
+    referralSource: { type: String }, // Optional, only if 'referral'
+    message: { type: String, required: true },
+    permissionGranted: { type: Boolean, required: true },
+    // Admin tracking fields
+    status: {
+      type: String,
+      default: "new",
+      enum: ["new", "reviewed", "contacted", "resolved"],
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("Inquiry", inquirySchema);
+</file>
+
+<file path="src/models/PrescreenQuestion.js">
+// src/models/PrescreenQuestion.js
+import mongoose from "mongoose";
+
+/**
+ * A "PrescreenQuestion" lives in a global library.
+ * Each job posting references an array of these by ID.
+ *
+ * type:
+ *   "open"    → free-text answer (textarea on the form)
+ *   "yes_no"  → Yes / No radio, each option can carry a score + knockout flag
+ *   "select"  → dropdown/radio from a list of custom options
+ */
+
+const yesNoOptionSchema = new mongoose.Schema(
+  {
+    label: { type: String, required: true }, // "Yes" | "No"
+    score: { type: Number, default: 0 }, // scoring weight (0–10)
+    isKnockout: { type: Boolean, default: false }, // auto-flag if chosen
+  },
+  { _id: false },
+);
+
+const selectOptionSchema = new mongoose.Schema(
+  {
+    label: { type: String, required: true },
+    score: { type: Number, default: 0 },
+    isKnockout: { type: Boolean, default: false },
+  },
+  { _id: false },
+);
+
+const prescreenQuestionSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ["open", "yes_no", "select"],
+      default: "open",
+    },
+    isRequired: {
+      type: Boolean,
+      default: true,
+    },
+    // Only used when type === "yes_no"
+    yesNoOptions: {
+      type: [yesNoOptionSchema],
+      default: [],
+    },
+    // Only used when type === "select"
+    selectOptions: {
+      type: [selectOptionSchema],
+      default: [],
+    },
+    // Soft-delete / archive
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    // Which category this belongs to for filtering in the question picker
+    category: {
+      type: String,
+      default: "General",
+      trim: true,
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("PrescreenQuestion", prescreenQuestionSchema);
+</file>
+
+<file path="src/models/Product.js">
+import mongoose from "mongoose";
+
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    imageUrl: {
+      type: String, // Will point to an AWS S3 URL
+      required: true,
+    },
+    accentColor: {
+      type: String, // e.g., "#ff5c00"
+      default: "#111111",
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("Product", productSchema);
+</file>
+
+<file path="src/models/Resource.js">
+import mongoose from "mongoose";
+
+const resourceSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    type: {
+      type: String, // e.g., "Worksheet (PDF)"
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    fileUrl: {
+      type: String, // Will point to the actual PDF uploaded to AWS S3
+      required: true,
+    },
+    accentColor: {
+      type: String,
+      default: "#14b8a6",
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("Resource", resourceSchema);
+</file>
+
+<file path="src/models/Review.js">
+import mongoose from "mongoose";
+
+const reviewSchema = new mongoose.Schema(
+  {
+    providerName: {
+      type: String,
+      required: true,
+    },
+    providerRole: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+    },
+    wouldRecommend: {
+      type: Boolean,
+      required: true,
+    },
+    feedback: {
+      type: String,
+      required: true,
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: 5,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "private"],
+      default: "pending",
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("Review", reviewSchema);
+</file>
+
+<file path="src/models/User.js">
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      select: false, // Don't return passwords by default in queries
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("User", userSchema);
+</file>
+
+<file path="src/routes/auth.routes.js">
+import express from 'express';
+import { loginAdmin } from '../controllers/auth.controller.js';
+const router = express.Router();
+router.post('/login', loginAdmin);
+export default router;
+</file>
+
+<file path="src/routes/prescreen.routes.js">
+// src/routes/prescreen.routes.js
+import express from "express";
+import {
+  getQuestionsForJob,
+  getAllQuestions,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
+  setJobQuestions,
+  seedQuestions,
+} from "../controllers/prescreen.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// ─── Public ──────────────────────────────────────────────────────────
+// Fetch questions for a specific job's application form
+router.get("/job/:jobId", getQuestionsForJob);
+
+// ─── Admin ───────────────────────────────────────────────────────────
+// Global question bank CRUD
+router.get("/", protect, getAllQuestions);
+router.post("/", protect, createQuestion);
+router.put("/:id", protect, updateQuestion);
+router.delete("/:id", protect, deleteQuestion);
+
+// Attach question set to a job posting
+router.put("/job/:jobId/questions", protect, setJobQuestions);
+
+// One-time seed — disable after first run
+router.post("/seed", protect, seedQuestions);
+
+export default router;
+</file>
+
+<file path="src/routes/review.routes.js">
+import express from "express";
+import {
+  createReview,
+  getApprovedReviews,
+  getAllReviews,
+  updateReviewStatus,
+} from "../controllers/review.controller.js";
+import { validate } from "../middlewares/validate.middleware.js";
+import { createReviewSchema } from "../validations/review.validation.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+router.post("/", validate(createReviewSchema), createReview);
+router.get("/", getApprovedReviews);
+router.get("/admin", protect, getAllReviews);
+router.patch("/:id/status", protect, updateReviewStatus); // <-- NEW ROUTE FOR TOGGLING
+
+export default router;
+</file>
+
+<file path="src/services/career-email.service.js">
+import transporter from "../config/nodemailer.config.js";
+
+const FROM_NAME = "Avighna Holistic Care";
+const FROM_EMAIL = process.env.SMTP_FROM || process.env.SMTP_USER;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+
+// ─── Base HTML wrapper ───────────────────────────────────────────────
+const wrapHtml = (body) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background:#f7f7f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7f7;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+          <!-- Header -->
+          <tr>
+            <td style="background:#111111;padding:32px 40px;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">
+                Avighna<span style="color:#14b8a6;">.</span>
+              </h1>
+              <p style="margin:4px 0 0;color:rgba(255,255,255,0.5);font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:600;">
+                Holistic Care
+              </p>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              ${body}
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background:#fafafa;padding:24px 40px;border-top:1px solid #f0f0f0;">
+              <p style="margin:0;color:#999;font-size:12px;line-height:1.6;">
+                Avighna Holistic Care &bull; Raleigh, NC<br />
+                <a href="https://avighnahc.com" style="color:#14b8a6;text-decoration:none;">avighnahc.com</a> &bull;
+                (919) 322-0140
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+// ─── 1. Application Received (to applicant) ──────────────────────────
+export const sendApplicationReceived = async ({
+  to,
+  applicantName,
+  jobTitle,
+}) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      Application Received
+    </h2>
+    <p style="margin:0 0 24px;color:#666;font-size:15px;line-height:1.7;">
+      Hi ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Thank you for your interest in the <strong style="color:#111;">${jobTitle}</strong> position at
+      Avighna Holistic Care. We've successfully received your application and resume.
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Our team will carefully review your qualifications. If your profile matches our needs,
+      we'll reach out to schedule a conversation. You can expect to hear from us within
+      <strong style="color:#111;">5–7 business days</strong>.
+    </p>
+    <div style="background:#f0fdf9;border-left:4px solid #14b8a6;padding:16px 20px;border-radius:0 8px 8px 0;margin:24px 0;">
+      <p style="margin:0;color:#111;font-size:14px;font-weight:600;">What happens next?</p>
+      <p style="margin:8px 0 0;color:#555;font-size:14px;line-height:1.6;">
+        Application Review → Phone Screen → Interview → Decision
+      </p>
+    </div>
+    <p style="margin:24px 0 0;color:#666;font-size:15px;line-height:1.7;">
+      We appreciate your time and look forward to learning more about you.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Application Received — ${jobTitle} | Avighna Holistic Care`,
+    html,
+  });
+};
+
+// ─── 2. Admin Notification (new application) ─────────────────────────
+export const sendAdminNewApplication = async ({
+  applicantName,
+  applicantEmail,
+  jobTitle,
+  jobId,
+  applicationId,
+}) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      📋 New Application
+    </h2>
+    <p style="margin:0 0 24px;color:#666;font-size:15px;line-height:1.7;">
+      A new application has been submitted.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fafafa;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+      <tr>
+        <td style="padding:20px;">
+          <p style="margin:0 0 12px;color:#111;font-size:14px;">
+            <strong>Applicant:</strong> ${applicantName}
+          </p>
+          <p style="margin:0 0 12px;color:#111;font-size:14px;">
+            <strong>Email:</strong> <a href="mailto:${applicantEmail}" style="color:#14b8a6;">${applicantEmail}</a>
+          </p>
+          <p style="margin:0;color:#111;font-size:14px;">
+            <strong>Position:</strong> ${jobTitle}
+          </p>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0;color:#666;font-size:14px;">
+      Log in to the <a href="https://avighnahc.com/admin" style="color:#14b8a6;font-weight:600;">Admin Panel</a> to review this application.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to: ADMIN_EMAIL,
+    subject: `New Application: ${applicantName} → ${jobTitle}`,
+    html,
+  });
+};
+
+// ─── 3. Status: Reviewing ────────────────────────────────────────────
+export const sendStatusReviewing = async ({ to, applicantName, jobTitle }) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      Your Application is Under Review
+    </h2>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Hi ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Good news! Your application for <strong style="color:#111;">${jobTitle}</strong> has moved forward
+      and is now being <strong style="color:#14b8a6;">actively reviewed</strong> by our hiring team.
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      We're carefully evaluating your qualifications and experience. If we'd like to move
+      forward, we'll be in touch to schedule the next step.
+    </p>
+    <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
+      Thank you for your patience and continued interest.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Update: Your Application is Under Review — ${jobTitle}`,
+    html,
+  });
+};
+
+// ─── 4. Status: Interviewing ─────────────────────────────────────────
+export const sendStatusInterviewing = async ({
+  to,
+  applicantName,
+  jobTitle,
+  interviewDate,
+  interviewLink,
+}) => {
+  const dateStr = interviewDate
+    ? new Date(interviewDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : null;
+
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      🎉 Interview Invitation
+    </h2>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Hi ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      We're impressed with your background and would love to learn more about you!
+      We'd like to invite you for an interview for the
+      <strong style="color:#111;">${jobTitle}</strong> position.
+    </p>
+    ${
+      dateStr
+        ? `
+    <div style="background:#f0fdf9;border-radius:12px;padding:20px 24px;margin:24px 0;">
+      <p style="margin:0 0 4px;color:#14b8a6;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;">
+        Interview Details
+      </p>
+      <p style="margin:0;color:#111;font-size:16px;font-weight:600;">
+        📅 ${dateStr}
+      </p>
+      ${
+        interviewLink
+          ? `
+      <p style="margin:12px 0 0;">
+        <a href="${interviewLink}" style="display:inline-block;background:#14b8a6;color:#fff;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;">
+          Join Interview →
+        </a>
+      </p>
+      `
+          : ""
+      }
+    </div>
+    `
+        : `
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      We'll follow up shortly with specific scheduling details. Please keep an eye on your inbox.
+    </p>
+    `
+    }
+    <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
+      If you have any questions or need to reschedule, please don't hesitate to reach out
+      at <a href="mailto:${ADMIN_EMAIL}" style="color:#14b8a6;">${ADMIN_EMAIL}</a>.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Interview Invitation — ${jobTitle} | Avighna Holistic Care`,
+    html,
+  });
+};
+
+// ─── 5. Status: Accepted ─────────────────────────────────────────────
+export const sendStatusAccepted = async ({ to, applicantName, jobTitle }) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      🎊 Congratulations!
+    </h2>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Dear ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      We are thrilled to inform you that after careful consideration, we would like to
+      <strong style="color:#14b8a6;">extend an offer</strong> for the
+      <strong style="color:#111;">${jobTitle}</strong> position at Avighna Holistic Care.
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Your skills, experience, and passion for holistic mental healthcare truly stood out during
+      our evaluation process. We believe you'll be a wonderful addition to our team.
+    </p>
+    <div style="background:#f0fdf9;border-left:4px solid #14b8a6;padding:16px 20px;border-radius:0 8px 8px 0;margin:24px 0;">
+      <p style="margin:0;color:#111;font-size:14px;font-weight:600;">Next Steps</p>
+      <p style="margin:8px 0 0;color:#555;font-size:14px;line-height:1.6;">
+        A member of our team will reach out within 1–2 business days with your
+        formal offer letter and onboarding details.
+      </p>
+    </div>
+    <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
+      Welcome to the Avighna family! We can't wait to work with you.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Offer Extended — ${jobTitle} | Avighna Holistic Care`,
+    html,
+  });
+};
+
+// ─── 6. Status: Rejected (polite, with 30-day data notice) ──────────
+export const sendStatusRejected = async ({ to, applicantName, jobTitle }) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      Application Update
+    </h2>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Dear ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Thank you for taking the time to apply for the
+      <strong style="color:#111;">${jobTitle}</strong> position at Avighna Holistic Care.
+      We truly appreciate your interest in joining our team.
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      After thorough review, we have decided to move forward with other candidates whose
+      experience more closely aligns with our current needs. This was not an easy decision,
+      and it does not diminish the value of your qualifications.
+    </p>
+    <div style="background:#fff8f0;border-left:4px solid #ff5c00;padding:16px 20px;border-radius:0 8px 8px 0;margin:24px 0;">
+      <p style="margin:0;color:#111;font-size:14px;font-weight:600;">Data Privacy Notice</p>
+      <p style="margin:8px 0 0;color:#555;font-size:14px;line-height:1.6;">
+        Per our data retention policy, your resume and application documents will be
+        securely removed from our systems within <strong>30 days</strong> of your
+        original submission date.
+      </p>
+    </div>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      We encourage you to keep an eye on our
+      <a href="https://avighnahc.com/careers" style="color:#14b8a6;font-weight:600;">careers page</a>
+      for future openings that may be a great fit. We'd love to hear from you again.
+    </p>
+    <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
+      Wishing you all the best in your career journey.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Application Update — ${jobTitle} | Avighna Holistic Care`,
+    html,
+  });
+};
+
+// ─── 7. Auto-expiry reminder (sent by cron before deleting resume) ───
+export const sendResumeExpiryNotice = async ({
+  to,
+  applicantName,
+  jobTitle,
+}) => {
+  const html = wrapHtml(`
+    <h2 style="margin:0 0 8px;color:#111;font-size:24px;font-weight:600;">
+      Data Retention Notice
+    </h2>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      Dear ${applicantName},
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      This is to inform you that your resume submitted for the
+      <strong style="color:#111;">${jobTitle}</strong> position has reached our
+      30-day retention period and has been <strong>securely deleted</strong> from our systems.
+    </p>
+    <p style="margin:0 0 16px;color:#666;font-size:15px;line-height:1.7;">
+      If you'd like to be considered for future opportunities, you're welcome to submit
+      a new application through our
+      <a href="https://avighnahc.com/careers" style="color:#14b8a6;font-weight:600;">careers page</a>
+      at any time.
+    </p>
+    <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
+      Thank you for your interest in Avighna Holistic Care.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+    to,
+    subject: `Your Resume Has Been Removed — Avighna Holistic Care`,
+    html,
+  });
+};
+</file>
+
+<file path="src/services/email.service.js">
+import { SendEmailCommand } from "@aws-sdk/client-ses";
+import { sesClient } from "../config/aws.config.js";
+
+export const sendAdminNotification = async (inquiryData) => {
+  const params = {
+    Destination: { ToAddresses: [process.env.ADMIN_EMAIL] },
+    Message: {
+      Body: {
+        Text: {
+          Data: `New Inquiry from ${inquiryData.firstName} ${inquiryData.lastName} (${inquiryData.email}):\n\n${inquiryData.message}`,
+        },
+      },
+      Subject: {
+        Data: `New Website Inquiry: ${inquiryData.firstName} ${inquiryData.lastName}`,
+      },
+    },
+    Source: process.env.ADMIN_EMAIL,
+  };
+  return sesClient.send(new SendEmailCommand(params));
+};
+</file>
+
+<file path="src/services/s3.service.js">
+// src/services/s3.service.js
+import {
+  PutObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3Client } from "../config/aws.config.js";
+import crypto from "crypto";
+
+/**
+ * Upload a file to S3
+ * @param {Object} file - Multer file object (buffer, originalname, mimetype)
+ * @param {string} folder - S3 folder/prefix (e.g., "resumes", "blogs", "resources")
+ * @returns {Object} { url, key } - The public URL and S3 key for later deletion
+ */
+export const uploadFileToS3 = async (file, folder = "misc") => {
+  const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
+  const key = `${folder}/${uniqueSuffix}-${file.originalname}`;
+
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
+
+  await s3Client.send(new PutObjectCommand(params));
+
+  const url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+  return { url, key };
+};
+
+/**
+ * Delete a file from S3 by its key
+ * @param {string} key - The S3 object key (e.g., "resumes/1234-abc-resume.pdf")
+ * @returns {boolean} true if deleted successfully
+ */
+export const deleteFileFromS3 = async (key) => {
+  if (!key) return false;
+
+  try {
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    };
+
+    await s3Client.send(new DeleteObjectCommand(params));
+    console.log(`🗑️  S3: Deleted ${key}`);
+    return true;
+  } catch (error) {
+    console.error(`❌ S3 Delete Error for key "${key}":`, error.message);
+    return false;
+  }
+};
+
+/**
+ * Generate a secure, temporary URL to view a private file
+ * @param {string} key - The S3 object key
+ * @param {number} expiresIn - Expiration time in seconds (default: 1 hour)
+ * @returns {string|null} The pre-signed URL
+ */
+export const getFileSignedUrl = async (key, expiresIn = 3600) => {
+  if (!key) return null;
+
+  try {
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    });
+
+    // Generate a URL that will expire in exactly 1 hour
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    return signedUrl;
+  } catch (error) {
+    console.error(`❌ S3 Presigned URL Error for key "${key}":`, error.message);
+    return null;
+  }
+};
+</file>
+
+<file path="src/utils/ApiError.js">
+export class ApiError extends Error {
+  constructor(statusCode, message, isOperational = true, stack = "") {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = isOperational;
+    if (stack) {
+      this.stack = stack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+</file>
+
+<file path="src/utils/ApiResponse.js">
+export class ApiResponse {
+  constructor(statusCode, data, message = "Success") {
+    this.statusCode = statusCode;
+    this.data = data;
+    this.message = message;
+    this.success = statusCode < 400;
+  }
+}
+</file>
+
+<file path="src/utils/catchAsync.js">
+export const catchAsync = (fn) => {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+  };
+};
+</file>
+
+<file path="src/validations/inquiry.validation.js">
+import Joi from "joi";
+
+export const createInquirySchema = Joi.object({
+  firstName: Joi.string().required().trim(),
+  lastName: Joi.string().required().trim(),
+  email: Joi.string().email().required().trim(),
+  message: Joi.string().required().min(10),
+  permissionGranted: Joi.boolean().required().valid(true),
+});
+</file>
+
+<file path="src/validations/review.validation.js">
+import Joi from "joi";
+
+export const createReviewSchema = Joi.object({
+  providerName: Joi.string().required(),
+  providerRole: Joi.string().required(),
+  firstName: Joi.string().required().trim(),
+  lastName: Joi.string().required().trim(),
+  email: Joi.string().email().required().trim(),
+  wouldRecommend: Joi.boolean().required(),
+  feedback: Joi.string().required().min(5),
+  rating: Joi.number().min(1).max(5).default(5),
+});
+</file>
+
+<file path="src/server.js">
+import dotenv from "dotenv";
+import app from "./app.js";
+import connectDB from "./config/db.config.js";
+import startResumeCleanupJob from "./jobs/cleanupExpiredResumes.js";
+
+// Load env vars
+dotenv.config();
+
+// Connect to Database
+connectDB();
+
+// Start scheduled jobs
+startResumeCleanupJob();
+
+const PORT = process.env.PORT || 5001;
+
+const server = app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
+
+// Handle unhandled promise rejections (e.g., sudden DB drop)
+process.on("unhandledRejection", (err, promise) => {
+  console.error(`Error: ${err.message}`);
+  // Close server & exit process
+  server.close(() => process.exit(1));
+});
+</file>
+
+<file path="deploymentec2.txt">
+Phase 1: Accessing the Server (SSH)
+Before connecting, make sure your key file has the right security permissions. Keep the quotes around the file name to handle any spaces!
+
+Bash
+# 1. Secure the key file (only needs to be done once)
+chmod 400 "Avighna Backend.pem"
+
+# 2. Log into the AWS EC2 server
+ssh -i "Avighna Backend.pem" ubuntu@<your-ec2-public-ip>
+Phase 2: Preparing the Server & Code
+Once you see the ubuntu@ip-...:~$ prompt, you are inside the server.
+
+Bash
+# 1. Update the server's OS packages
+sudo apt update --fix-missing && sudo apt upgrade -y
+
+# 2. Install Node.js (v20) and Git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs git
+
+# 3. Clone your repository (use your GITHUB_TOKEN as the password)
+git clone https://github.com/your-username/your-repo-name.git
+
+# 4. Move into the project folder
+cd your-repo-name
+
+# 5. Install the project dependencies
+npm install
+Phase 3: The Environment Variables
+Your app needs its secret keys to talk to MongoDB Atlas and AWS S3/SES.
+
+Bash
+# 1. Create and open the hidden .env file
+nano .env
+Paste your variables (PORT=5002, MONGO_URI, AWS_REGION, etc.) into the editor.
+
+Save: Ctrl + X
+
+Confirm: Y
+
+Exit: Enter
+
+Phase 4: Keeping it Alive (PM2)
+PM2 ensures your Node app runs continuously in the background and restarts if it crashes. Make sure you run these while inside your project folder!
+
+Bash
+# 1. Install PM2 globally on the server
+sudo npm install -g pm2
+
+# 2. Start your backend
+pm2 start src/server.js --name "avighna-api"
+
+# 3. Generate the startup script (so it boots if AWS restarts)
+pm2 startup
+CRITICAL: Step 3 will output a command starting with sudo env PATH=$PATH... at the bottom of your terminal. You must copy that exact command and run it!
+
+Bash
+# 4. Save the PM2 configuration permanently
+pm2 save
+Phase 5: Routing Web Traffic (Nginx)
+Your app is running on Port 5002, but the internet knocks on Port 80. Nginx connects the two.
+
+Bash
+# 1. Install Nginx
+sudo apt install -y nginx
+
+# 2. Open the default configuration file
+sudo nano /etc/nginx/sites-available/default
+Delete everything inside that file and paste this exact block:
+
+Nginx
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:5002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+Save and exit (Ctrl + X, then Y, then Enter).
+
+Bash
+# 3. Test the Nginx syntax to make sure there are no typos
+sudo nginx -t
+
+# 4. Restart Nginx to apply the changes
+sudo systemctl restart nginx
+Phase 6: Everyday Maintenance Commands
+Keep these handy for when you need to push updates or check on the server later.
+
+PM2 (App Management)
+
+pm2 status : See if your app is online and how much memory it is using.
+
+pm2 logs avighna-api : Watch your live console logs (great for debugging errors).
+
+pm2 restart avighna-api : Restart the app (do this every time you change the .env file or pull new code).
+
+pm2 stop avighna-api : Temporarily shut down the backend.
+
+Git (Updating Code)
+When you push new code from your Mac to GitHub, log into the server and run:
+
+Bash
+cd your-repo-name
+git pull
+npm install
+pm2 restart avighna-api
+</file>
+
+<file path="scripts/createAdmin.js">
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import User from "../src/models/User.js";
+
+dotenv.config();
+
+const createAdmin = async () => {
+  const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+
+  if (!adminPassword) {
+    console.error(
+      "❌ ERROR: ADMIN_SEED_PASSWORD environment variable is not set.",
+    );
+    console.error("   Add it to your .env file before running this script.");
+    process.exit(1);
+  }
+
+  if (adminPassword.length < 12) {
+    console.error(
+      "❌ ERROR: ADMIN_SEED_PASSWORD must be at least 12 characters.",
+    );
+    process.exit(1);
+  }
+
+  await mongoose.connect(process.env.MONGO_URI);
+
+  const existing = await User.findOne({ email: process.env.ADMIN_EMAIL });
+  if (existing) {
+    console.log("⚠️  Admin user already exists. Skipping creation.");
+    process.exit(0);
+  }
+
+  const hashedPassword = await bcrypt.hash(adminPassword, 12);
+
+  await User.create({
+    name: "Avighna Admin",
+    email: process.env.ADMIN_EMAIL,
+    password: hashedPassword,
+  });
+
+  console.log("✅ Admin user created successfully!");
+  console.log(`   Email: ${process.env.ADMIN_EMAIL}`);
+  process.exit(0);
+};
+
+createAdmin().catch((err) => {
+  console.error("❌ Failed to create admin:", err.message);
+  process.exit(1);
+});
+</file>
+
+<file path="src/controllers/application.controller.js">
+// src/controllers/application.controller.js
+import Application from "../models/Application.js";
+import Career from "../models/Career.js";
+import PrescreenQuestion from "../models/PrescreenQuestion.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { uploadFileToS3, getFileSignedUrl } from "../services/s3.service.js";
+import {
+  sendApplicationReceived,
+  sendAdminNewApplication,
+  sendStatusReviewing,
+  sendStatusInterviewing,
+  sendStatusAccepted,
+  sendStatusRejected,
+} from "../services/career-email.service.js";
+
+// ─── PUBLIC ──────────────────────────────────────────────────────────
+
+// @desc    Submit a job application (with resume upload to S3)
+// @route   POST /api/applications/:jobId
+// @access  Public
+export const submitApplication = catchAsync(async (req, res) => {
+  const { jobId } = req.params;
+  const { firstName, lastName, email, phone, coverLetter, prescreenAnswers } =
+    req.body;
+
+  // 1. Validate job exists and is active, populate its prescreen questions
+  const job = await Career.findOne({ _id: jobId, isActive: true }).populate({
+    path: "prescreenQuestions",
+    match: { isActive: true },
+  });
+  if (!job) {
+    throw new ApiError(404, "This job posting is no longer available");
+  }
+
+  // 2. Check for deadline
+  if (
+    job.applicationDeadline &&
+    new Date(job.applicationDeadline) < new Date()
+  ) {
+    throw new ApiError(
+      400,
+      "The application deadline for this position has passed",
+    );
+  }
+
+  // 3. Check for duplicate application (same email + same job)
+  const existingApplication = await Application.findOne({
+    job: jobId,
+    email: email.toLowerCase(),
+  });
+  if (existingApplication) {
+    throw new ApiError(409, "You have already applied for this position");
+  }
+
+  // 4. Validate resume file
+  if (!req.file) {
+    throw new ApiError(400, "Resume file is required");
+  }
+  const allowedTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (!allowedTypes.includes(req.file.mimetype)) {
+    throw new ApiError(
+      400,
+      "Resume must be a PDF or Word document (.pdf, .doc, .docx)",
+    );
+  }
+
+  // 5. Upload resume to S3
+  const { url: resumeUrl, key: resumeS3Key } = await uploadFileToS3(
+    req.file,
+    "resumes",
+  );
+
+  // 6. Calculate resume expiry (30 days from now)
+  const resumeExpiresAt = new Date();
+  resumeExpiresAt.setDate(resumeExpiresAt.getDate() + 30);
+
+  // 7. Process prescreen answers
+  //    prescreenAnswers from the request body is expected to be a JSON string or array:
+  //    [{ questionId: "...", answer: "Yes" }, ...]
+  let parsedAnswers = [];
+  if (prescreenAnswers) {
+    try {
+      parsedAnswers =
+        typeof prescreenAnswers === "string"
+          ? JSON.parse(prescreenAnswers)
+          : prescreenAnswers;
+    } catch {
+      parsedAnswers = [];
+    }
+  }
+
+  let totalScore = 0;
+  let hasKnockout = false;
+  const processedAnswers = [];
+
+  for (const q of job.prescreenQuestions) {
+    const submitted = parsedAnswers.find(
+      (a) => a.questionId === q._id.toString(),
+    );
+    const answerText = submitted?.answer?.trim() || "";
+
+    let score = 0;
+    let isKnockout = false;
+
+    if (q.type === "yes_no") {
+      const match = q.yesNoOptions.find(
+        (opt) => opt.label.toLowerCase() === answerText.toLowerCase(),
+      );
+      if (match) {
+        score = match.score || 0;
+        isKnockout = match.isKnockout || false;
+      }
+    }
+    // For "open" and "select" types we store as-is; score defaults to 0
+
+    totalScore += score;
+    if (isKnockout) hasKnockout = true;
+
+    processedAnswers.push({
+      question: q._id,
+      questionText: q.text,
+      answer: answerText,
+      score,
+      isKnockout,
+    });
+  }
+
+  // 8. Create the application
+  const application = await Application.create({
+    job: jobId,
+    firstName,
+    lastName,
+    email: email.toLowerCase(),
+    phone: phone || "",
+    coverLetter: coverLetter || "",
+    resumeUrl,
+    resumeS3Key,
+    resumeExpiresAt,
+    prescreenAnswers: processedAnswers,
+    prescreenScore: totalScore,
+    prescreenKnockout: hasKnockout,
+  });
+
+  // 9. Send emails (non-blocking)
+  const applicantName = `${firstName} ${lastName}`;
+  Promise.allSettled([
+    sendApplicationReceived({ to: email, applicantName, jobTitle: job.title }),
+    sendAdminNewApplication({
+      applicantName,
+      applicantEmail: email,
+      jobTitle: job.title,
+      jobId: job._id,
+      applicationId: application._id,
+    }),
+  ]).then((results) => {
+    results.forEach((result, i) => {
+      if (result.status === "rejected") {
+        console.error(`Career email ${i} failed:`, result.reason?.message);
+      }
+    });
+  });
+
+  res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        applicationId: application._id,
+        status: application.status,
+        prescreenScore: totalScore,
+        prescreenKnockout: hasKnockout,
+      },
+      "Application submitted successfully",
+    ),
+  );
+});
+
+// ─── ADMIN ───────────────────────────────────────────────────────────
+
+// @desc    Get all applications (optionally filtered by job / status)
+// @route   GET /api/applications
+// @access  Private (Admin)
+export const getAllApplications = catchAsync(async (req, res) => {
+  const { jobId, status } = req.query;
+
+  const filter = {};
+  if (jobId) filter.job = jobId;
+  if (status) filter.status = status;
+
+  const applications = await Application.find(filter)
+    .populate("job", "title department accentColor")
+    .sort({ prescreenScore: -1, createdAt: -1 }); // best scores first
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, applications, "Applications fetched"));
+});
+
+// @desc    Get applications for a specific job
+// @route   GET /api/applications/job/:jobId
+// @access  Private (Admin)
+export const getApplicationsByJob = catchAsync(async (req, res) => {
+  const applications = await Application.find({ job: req.params.jobId }).sort({
+    prescreenScore: -1,
+    createdAt: -1,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, applications, "Applications fetched"));
+});
+
+// @desc    Get a single application by ID (with signed resume URL)
+// @route   GET /api/applications/:id
+// @access  Private (Admin)
+export const getApplicationById = catchAsync(async (req, res) => {
+  const application = await Application.findById(req.params.id).populate(
+    "job",
+    "title department accentColor prescreenQuestions",
+  );
+
+  if (!application) {
+    throw new ApiError(404, "Application not found");
+  }
+
+  let resumeSignedUrl = null;
+  if (!application.resumeDeleted && application.resumeS3Key) {
+    try {
+      resumeSignedUrl = await getFileSignedUrl(application.resumeS3Key);
+    } catch {
+      resumeSignedUrl = null;
+    }
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { ...application.toObject(), resumeSignedUrl },
+        "Application fetched",
+      ),
+    );
+});
+
+// @desc    Update application status (and trigger status email)
+// @route   PATCH /api/applications/:id/status
+// @access  Private (Admin)
+export const updateApplicationStatus = catchAsync(async (req, res) => {
+  const { status, note, interviewDate, interviewLink } = req.body;
+
+  const application = await Application.findById(req.params.id).populate(
+    "job",
+    "title",
+  );
+  if (!application) throw new ApiError(404, "Application not found");
+
+  const validStatuses = [
+    "applied",
+    "reviewing",
+    "interviewing",
+    "accepted",
+    "rejected",
+  ];
+  if (!validStatuses.includes(status)) {
+    throw new ApiError(
+      400,
+      `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+    );
+  }
+
+  application.status = status;
+  application.statusHistory.push({
+    status,
+    note: note || "",
+    changedAt: new Date(),
+  });
+
+  if (status === "interviewing") {
+    if (interviewDate) application.interviewDate = new Date(interviewDate);
+    if (interviewLink) application.interviewLink = interviewLink;
+  }
+
+  await application.save();
+
+  // Send status email (non-blocking)
+  const applicantName = `${application.firstName} ${application.lastName}`;
+  const emailPayload = {
+    to: application.email,
+    applicantName,
+    jobTitle: application.job?.title || "the position",
+  };
+
+  const emailMap = {
+    reviewing: () => sendStatusReviewing(emailPayload),
+    interviewing: () =>
+      sendStatusInterviewing({ ...emailPayload, interviewDate, interviewLink }),
+    accepted: () => sendStatusAccepted(emailPayload),
+    rejected: () => sendStatusRejected(emailPayload),
+  };
+
+  if (emailMap[status]) {
+    emailMap[status]().catch((err) =>
+      console.error(`Status email failed for ${status}:`, err.message),
+    );
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, application, "Application status updated"));
+});
+
+// @desc    Update admin notes on an application
+// @route   PATCH /api/applications/:id/notes
+// @access  Private (Admin)
+export const updateApplicationNotes = catchAsync(async (req, res) => {
+  const { adminNotes } = req.body;
+
+  const application = await Application.findByIdAndUpdate(
+    req.params.id,
+    { adminNotes },
+    { new: true },
+  );
+
+  if (!application) throw new ApiError(404, "Application not found");
+
+  res.status(200).json(new ApiResponse(200, application, "Notes updated"));
+});
+
+// @desc    Get application stats (for admin dashboard widgets)
+// @route   GET /api/applications/stats
+// @access  Private (Admin)
+export const getApplicationStats = catchAsync(async (req, res) => {
+  const [total, byStatus, knockouts] = await Promise.all([
+    Application.countDocuments(),
+    Application.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+    Application.countDocuments({ prescreenKnockout: true }),
+  ]);
+
+  const statusMap = {};
+  byStatus.forEach(({ _id, count }) => {
+    statusMap[_id] = count;
+  });
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        total,
+        byStatus: statusMap,
+        knockouts,
+      },
+      "Stats fetched",
+    ),
+  );
+});
+</file>
+
+<file path="src/controllers/blog.controller.js">
+import Blog from "../models/Blog.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiError } from "../utils/ApiError.js";
+
+// @desc    Create a new blog post
+// @route   POST /api/blogs
+// @access  Private/Admin
+export const createBlog = catchAsync(async (req, res) => {
+  const { title, excerpt, content, category, coverImageUrl, tags } = req.body;
+
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+
+  const blog = await Blog.create({
+    title,
+    slug,
+    excerpt,
+    content,
+    category,
+    coverImageUrl,
+    tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+  });
+
+  res.status(201).json({
+    status: "success",
+    message: "Blog published successfully",
+    data: blog,
+  });
+});
+
+// @desc    Get all blogs (with optional category filtering)
+// @route   GET /api/blogs
+// @access  Public
+export const getBlogs = catchAsync(async (req, res) => {
+  const { category } = req.query;
+  const filter = category && category !== "All blogs" ? { category } : {};
+  const blogs = await Blog.find(filter).sort({ createdAt: -1 });
+
+  res.status(200).json({
+    status: "success",
+    results: blogs.length,
+    data: blogs,
+  });
+});
+
+// @desc    Get a single blog by its URL slug
+// @route   GET /api/blogs/:slug
+// @access  Public
+export const getBlogBySlug = catchAsync(async (req, res) => {
+  const blog = await Blog.findOne({ slug: req.params.slug });
+
+  if (!blog) {
+    return res
+      .status(404)
+      .json({ status: "error", message: "Article not found" });
+  }
+
+  res.status(200).json({ status: "success", data: blog });
+});
+
+// @desc    Update a blog post
+// @route   PUT /api/blogs/:slug
+// @access  Private/Admin
+export const updateBlog = catchAsync(async (req, res) => {
+  const { title, excerpt, content, category, coverImageUrl, tags, isFeatured } =
+    req.body;
+
+  const blog = await Blog.findOne({ slug: req.params.slug });
+  if (!blog) throw new ApiError(404, "Blog not found");
+
+  // If title changed, regenerate slug
+  if (title && title !== blog.title) {
+    blog.slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+    blog.title = title;
+  }
+
+  if (excerpt !== undefined) blog.excerpt = excerpt;
+  if (content !== undefined) blog.content = content;
+  if (category !== undefined) blog.category = category;
+  if (coverImageUrl !== undefined) blog.coverImageUrl = coverImageUrl;
+  if (isFeatured !== undefined) blog.isFeatured = isFeatured;
+  if (tags !== undefined)
+    blog.tags =
+      typeof tags === "string" ? tags.split(",").map((t) => t.trim()) : tags;
+
+  await blog.save();
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Blog updated", data: blog });
+});
+
+// @desc    Delete a blog post
+// @route   DELETE /api/blogs/:slug
+// @access  Private/Admin
+export const deleteBlog = catchAsync(async (req, res) => {
+  const blog = await Blog.findOneAndDelete({ slug: req.params.slug });
+  if (!blog) throw new ApiError(404, "Blog not found");
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Blog deleted successfully" });
+});
+</file>
+
+<file path="src/controllers/inquiry.controller.js">
+import Inquiry from "../models/Inquiry.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+
+// @desc    Create new inquiry from Contact Page
+// @route   POST /api/inquiries
+// @access  Public
+export const createInquiry = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      patientStatus,
+      contactReason,
+      clinician,
+      referralSource,
+      message,
+      permissionGranted,
+    } = req.body;
+
+    if (!permissionGranted) {
+      return res.status(400).json({
+        success: false,
+        message: "Permission to contact is required.",
+      });
+    }
+
+    const newInquiry = await Inquiry.create({
+      firstName,
+      lastName,
+      email,
+      phone,
+      patientStatus,
+      contactReason,
+      clinician: patientStatus !== "referral" ? clinician : undefined,
+      referralSource: patientStatus === "referral" ? referralSource : undefined,
+      message,
+      permissionGranted,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Inquiry submitted successfully",
+      data: newInquiry,
+    });
+  } catch (error) {
+    console.error("Error saving inquiry:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
+  }
+};
+
+// @desc    Get all inquiries
+// @route   GET /api/inquiries
+// @access  Private/Admin
+export const getInquiries = async (req, res) => {
+  try {
+    const inquiries = await Inquiry.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: inquiries.length,
+      data: inquiries,
+    });
+  } catch (error) {
+    console.error("Error fetching inquiries:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching inquiries.",
+    });
+  }
+};
+
+// @desc    Update inquiry status
+// @route   PATCH /api/inquiries/:id/status
+// @access  Private/Admin
+export const updateInquiryStatus = catchAsync(async (req, res) => {
+  const { status } = req.body;
+
+  const validStatuses = ["new", "reviewed", "contacted", "resolved"];
+  if (!validStatuses.includes(status)) {
+    throw new ApiError(
+      400,
+      `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+    );
+  }
+
+  const inquiry = await Inquiry.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { new: true, runValidators: true },
+  );
+
+  if (!inquiry) {
+    throw new ApiError(404, "Inquiry not found");
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, inquiry, `Inquiry status updated to "${status}"`),
+    );
+});
+</file>
+
+<file path="src/controllers/product.controller.js">
+import Product from "../models/Product.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiError } from "../utils/ApiError.js";
+
+// @desc    Get all recommended products
+// @route   GET /api/products
+// @access  Public
+export const getProducts = catchAsync(async (req, res) => {
+  const { category } = req.query;
+  const filter = category && category !== "All" ? { category } : {};
+  const products = await Product.find(filter).sort({ createdAt: -1 });
+
+  res
+    .status(200)
+    .json({ status: "success", results: products.length, data: products });
+});
+
+// @desc    Create a new product
+// @route   POST /api/products
+// @access  Private/Admin
+export const createProduct = catchAsync(async (req, res) => {
+  const { name, category, price, description, imageUrl, accentColor } =
+    req.body;
+
+  const product = await Product.create({
+    name,
+    category,
+    price,
+    description,
+    imageUrl,
+    accentColor: accentColor || "#ff5c00",
+  });
+
+  res
+    .status(201)
+    .json({
+      status: "success",
+      message: "Product added successfully",
+      data: product,
+    });
+});
+
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
+export const updateProduct = catchAsync(async (req, res) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!product) throw new ApiError(404, "Product not found");
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Product updated", data: product });
+});
+
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+export const deleteProduct = catchAsync(async (req, res) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+  if (!product) throw new ApiError(404, "Product not found");
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Product deleted successfully" });
+});
+</file>
+
+<file path="src/controllers/resource.controller.js">
+import Resource from "../models/Resource.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiError } from "../utils/ApiError.js";
+
+// @desc    Get all resources
+// @route   GET /api/resources
+// @access  Public
+export const getResources = catchAsync(async (req, res) => {
+  const resources = await Resource.find().sort({ createdAt: -1 });
+
+  res
+    .status(200)
+    .json({ status: "success", results: resources.length, data: resources });
+});
+
+// @desc    Create a new resource
+// @route   POST /api/resources
+// @access  Private/Admin
+export const createResource = catchAsync(async (req, res) => {
+  const { title, type, description, fileUrl, accentColor } = req.body;
+
+  const resource = await Resource.create({
+    title,
+    type,
+    description,
+    fileUrl,
+    accentColor: accentColor || "#14b8a6",
+  });
+
+  res
+    .status(201)
+    .json({
+      status: "success",
+      message: "Resource added successfully",
+      data: resource,
+    });
+});
+
+// @desc    Update a resource
+// @route   PUT /api/resources/:id
+// @access  Private/Admin
+export const updateResource = catchAsync(async (req, res) => {
+  const resource = await Resource.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!resource) throw new ApiError(404, "Resource not found");
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Resource updated", data: resource });
+});
+
+// @desc    Delete a resource
+// @route   DELETE /api/resources/:id
+// @access  Private/Admin
+export const deleteResource = catchAsync(async (req, res) => {
+  const resource = await Resource.findByIdAndDelete(req.params.id);
+  if (!resource) throw new ApiError(404, "Resource not found");
+
+  res
+    .status(200)
+    .json({ status: "success", message: "Resource deleted successfully" });
+});
+</file>
+
+<file path="src/models/Application.js">
+// src/models/Application.js
+import mongoose from "mongoose";
+
+const statusHistorySchema = new mongoose.Schema(
+  {
+    status: { type: String, required: true },
+    note: { type: String, default: "" },
+    changedAt: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
+
+/**
+ * Stores one candidate's answer to a prescreen question.
+ * - question: ref to PrescreenQuestion
+ * - answer:   free text for "open" type
+ * - score:    computed from the chosen option for yes_no / select
+ * - isKnockout: true if the chosen option was flagged knockout
+ */
+const prescreenAnswerSchema = new mongoose.Schema(
+  {
+    question: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PrescreenQuestion",
+      required: true,
+    },
+    questionText: {
+      // snapshot so we keep the text even if the question is later edited
+      type: String,
+      required: true,
+    },
+    answer: {
+      type: String,
+      default: "",
+    },
+    score: {
+      type: Number,
+      default: 0,
+    },
+    isKnockout: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { _id: false },
+);
+
+const applicationSchema = new mongoose.Schema(
+  {
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Career",
+      required: true,
+    },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    phone: { type: String, trim: true, default: "" },
+    coverLetter: { type: String, default: "" },
+
+    // ─── Resume (S3) ────────────────────────────────────────────────
+    resumeUrl: { type: String, required: true },
+    resumeS3Key: { type: String, required: true },
+    resumeDeleted: { type: Boolean, default: false },
+    resumeExpiresAt: { type: Date, required: true },
+
+    // ─── Prescreen Answers ──────────────────────────────────────────
+    prescreenAnswers: {
+      type: [prescreenAnswerSchema],
+      default: [],
+    },
+
+    /**
+     * Derived totals — computed when the application is created.
+     * Makes it easy to sort / filter in the admin dashboard.
+     */
+    prescreenScore: {
+      type: Number,
+      default: 0,
+    },
+    prescreenKnockout: {
+      type: Boolean,
+      default: false,
+    },
+
+    // ─── Status Pipeline ────────────────────────────────────────────
+    status: {
+      type: String,
+      enum: ["applied", "reviewing", "interviewing", "accepted", "rejected"],
+      default: "applied",
+    },
+    statusHistory: {
+      type: [statusHistorySchema],
+      default: [],
+    },
+    interviewDate: { type: Date, default: null },
+    interviewLink: { type: String, default: "" },
+    adminNotes: { type: String, default: "" },
+  },
+  { timestamps: true },
+);
+
+// Index for the cleanup cron job
+applicationSchema.index({ resumeExpiresAt: 1, resumeDeleted: 1 });
+// Index for querying applications by job
+applicationSchema.index({ job: 1, status: 1 });
+// Index for sorting by score in the admin dashboard
+applicationSchema.index({ job: 1, prescreenScore: -1 });
+
+// Push initial status on creation
+applicationSchema.pre("save", function (next) {
+  if (this.isNew) {
+    this.statusHistory.push({
+      status: "applied",
+      note: "Application submitted",
+      changedAt: new Date(),
+    });
+  }
+  next();
+});
+
+export default mongoose.model("Application", applicationSchema);
+</file>
+
+<file path="src/routes/application.routes.js">
+import express from "express";
+import multer from "multer";
+import {
+  submitApplication,
+  getAllApplications,
+  getApplicationsByJob,
+  getApplicationById,
+  updateApplicationStatus,
+  updateApplicationNotes,
+  getApplicationStats,
+} from "../controllers/application.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (allowed.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PDF and Word documents are allowed"), false);
+    }
+  },
+});
+
+// ─── Admin Routes (Protected) — MUST come before /:id ───────────────
+router.get("/", protect, getAllApplications);
+router.get("/stats", protect, getApplicationStats);
+router.get("/job/:jobId", protect, getApplicationsByJob);
+
+// ─── Wildcard routes LAST ────────────────────────────────────────────
+router.post("/:jobId", upload.single("resume"), submitApplication);
+router.get("/:id", protect, getApplicationById);
+router.patch("/:id/status", protect, updateApplicationStatus);
+router.patch("/:id/notes", protect, updateApplicationNotes);
+
+export default router;
+</file>
+
+<file path="src/routes/blog.routes.js">
+import express from "express";
+import {
+  getBlogs,
+  getBlogBySlug,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+} from "../controllers/blog.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// ─── Public Routes ───────────────────────────────────────────────────
+router.get("/", getBlogs);
+
+// ─── Admin Routes — MUST come before /:slug ─────────────────────────
+router.post("/", protect, createBlog);
+
+// ─── Wildcard Routes LAST ────────────────────────────────────────────
+router.get("/:slug", getBlogBySlug);
+router.put("/:slug", protect, updateBlog);
+router.delete("/:slug", protect, deleteBlog);
+
+export default router;
+</file>
+
+<file path="src/routes/career.routes.js">
+import express from "express";
+import {
+  getCareers,
+  getCareerById,
+  getAdminCareers,
+  createCareer,
+  updateCareer,
+  deleteCareer,
+  getDepartments,
+} from "../controllers/career.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// ─── Public Routes ───────────────────────────────────────────────────
+// IMPORTANT: specific named routes MUST come before /:id
+router.get("/departments", getDepartments);
+router.get("/", getCareers);
+
+// ─── Admin Routes (Protected) ───────────────────────────────────────
+// IMPORTANT: /admin/all MUST come before /:id
+router.get("/admin/all", protect, getAdminCareers);
+router.post("/", protect, createCareer);
+
+// ─── Wildcard routes LAST ────────────────────────────────────────────
+router.get("/:id", getCareerById);
+router.put("/:id", protect, updateCareer);
+router.delete("/:id", protect, deleteCareer);
+
+export default router;
+</file>
+
+<file path="src/routes/index.js">
+// src/routes/index.js
+import express from "express";
+import authRoutes from "./auth.routes.js";
+import inquiryRoutes from "./inquiry.routes.js";
+import reviewRoutes from "./review.routes.js";
+import blogRoutes from "./blog.routes.js";
+import productRoutes from "./product.routes.js";
+import careerRoutes from "./career.routes.js";
+import resourceRoutes from "./resource.routes.js";
+import applicationRoutes from "./application.routes.js";
+import prescreenRoutes from "./prescreen.routes.js"; // ← ADD THIS
+
+const router = express.Router();
+
+router.use("/auth", authRoutes);
+router.use("/inquiries", inquiryRoutes);
+router.use("/reviews", reviewRoutes);
+router.use("/blogs", blogRoutes);
+router.use("/products", productRoutes);
+router.use("/careers", careerRoutes);
+router.use("/resources", resourceRoutes);
+router.use("/applications", applicationRoutes);
+router.use("/prescreen", prescreenRoutes); // ← ADD THIS
+
+export default router;
+</file>
+
+<file path="src/routes/inquiry.routes.js">
+import express from "express";
+import {
+  createInquiry,
+  getInquiries,
+  updateInquiryStatus,
+} from "../controllers/inquiry.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// Public — submit a contact form
+router.post("/", createInquiry);
+
+// Admin only — read all inquiries (PROTECTED — patient PII/HIPAA)
+router.get("/", protect, getInquiries);
+
+// Admin only — update inquiry status (new → reviewed → contacted → resolved)
+router.patch("/:id/status", protect, updateInquiryStatus);
+
+export default router;
+</file>
+
+<file path="src/routes/product.routes.js">
+import express from "express";
+import {
+  getProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../controllers/product.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// ─── Public Routes ───────────────────────────────────────────────────
+router.get("/", getProducts);
+
+// ─── Admin Routes ────────────────────────────────────────────────────
+router.post("/", protect, createProduct);
+router.put("/:id", protect, updateProduct);
+router.delete("/:id", protect, deleteProduct);
+
+export default router;
+</file>
+
+<file path="src/routes/resource.routes.js">
+import express from "express";
+import {
+  getResources,
+  createResource,
+  updateResource,
+  deleteResource,
+} from "../controllers/resource.controller.js";
+import { protect } from "../middlewares/auth.middleware.js";
+
+const router = express.Router();
+
+// ─── Public Routes ───────────────────────────────────────────────────
+router.get("/", getResources);
+
+// ─── Admin Routes ────────────────────────────────────────────────────
+router.post("/", protect, createResource);
+router.put("/:id", protect, updateResource);
+router.delete("/:id", protect, deleteResource);
+
+export default router;
+</file>
+
+<file path="src/validations/career.validation.js">
+import Joi from "joi";
+
+export const createCareerSchema = Joi.object({
+  title: Joi.string().required().trim().min(3).max(200),
+  type: Joi.string()
+    .required()
+    .valid("Full-time", "Part-time", "Contract", "Per Diem", "Internship"),
+  location: Joi.string().required().trim(),
+  department: Joi.string().required().trim(),
+  description: Joi.string().required().min(20),
+  responsibilities: Joi.array().items(Joi.string().trim()).default([]),
+  qualifications: Joi.array().items(Joi.string().trim()).default([]),
+  benefits: Joi.array().items(Joi.string().trim()).default([]),
+  salaryMin: Joi.number().positive().allow(null).default(null),
+  salaryMax: Joi.number().positive().allow(null).default(null),
+  salaryType: Joi.string().valid("hourly", "yearly").default("yearly"),
+  applicationDeadline: Joi.date().allow(null).default(null),
+  accentColor: Joi.string()
+    .pattern(/^#[0-9a-fA-F]{6}$/)
+    .default("#14b8a6"),
+});
+
+export const updateCareerSchema = Joi.object({
+  title: Joi.string().trim().min(3).max(200),
+  type: Joi.string().valid(
+    "Full-time",
+    "Part-time",
+    "Contract",
+    "Per Diem",
+    "Internship",
+  ),
+  location: Joi.string().trim(),
+  department: Joi.string().trim(),
+  description: Joi.string().min(20),
+  responsibilities: Joi.array().items(Joi.string().trim()),
+  qualifications: Joi.array().items(Joi.string().trim()),
+  benefits: Joi.array().items(Joi.string().trim()),
+  salaryMin: Joi.number().positive().allow(null),
+  salaryMax: Joi.number().positive().allow(null),
+  salaryType: Joi.string().valid("hourly", "yearly"),
+  applicationDeadline: Joi.date().allow(null),
+  accentColor: Joi.string().pattern(/^#[0-9a-fA-F]{6}$/),
+  isActive: Joi.boolean(),
+}).min(1); // At least one field must be provided
+
+export const submitApplicationSchema = Joi.object({
+  firstName: Joi.string().required().trim().min(1).max(100),
+  lastName: Joi.string().required().trim().min(1).max(100),
+  email: Joi.string().email().required().trim(),
+  phone: Joi.string().trim().allow("").max(20),
+  coverLetter: Joi.string().allow("").max(5000),
+});
+</file>
+
+<file path=".gitignore">
+node_modules/
+.DS_Store
+logs/
+</file>
+
+<file path="package.json">
+{
+  "name": "avighna-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Avighna Holistic Care",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "NODE_ENV=production node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.500.0",
+    "@aws-sdk/client-ses": "^3.500.0",
+    "@aws-sdk/s3-request-presigner": "^3.1016.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.4.1",
+    "helmet": "^7.1.0",
+    "joi": "^17.12.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.1.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
+</file>
+
+<file path="src/controllers/career.controller.js">
+// src/controllers/career.controller.js
+import Career from "../models/Career.js";
+import Application from "../models/Application.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+
+// ─── PUBLIC ──────────────────────────────────────────────────────────
+
+// @desc    Get all active careers (public listing)
+// @route   GET /api/careers
+// @access  Public
+export const getCareers = catchAsync(async (req, res) => {
+  const { department } = req.query;
+
+  const filter = { isActive: true };
+  if (department && department !== "All") {
+    filter.department = department;
+  }
+
+  const careers = await Career.find(filter)
+    .sort({ createdAt: -1 })
+    .populate("applicantCount");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, careers, "Careers fetched successfully"));
+});
+
+// @desc    Get a single career by ID (public detail page)
+// @route   GET /api/careers/:id
+// @access  Public
+export const getCareerById = catchAsync(async (req, res) => {
+  const career = await Career.findOne({
+    _id: req.params.id,
+    isActive: true,
+  })
+    .populate("applicantCount")
+    .populate("prescreenQuestions"); // ← populate so frontend gets full question objects
+
+  if (!career) {
+    throw new ApiError(404, "Job posting not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, career, "Career fetched successfully"));
+});
+
+// ─── ADMIN ───────────────────────────────────────────────────────────
+
+// @desc    Get all careers (admin — includes inactive + applicant counts)
+// @route   GET /api/careers/admin/all
+// @access  Private (Admin)
+export const getAdminCareers = catchAsync(async (req, res) => {
+  const careers = await Career.find()
+    .sort({ createdAt: -1 })
+    .populate("applicantCount")
+    .populate("prescreenQuestions"); // ← so the edit modal pre-fills correctly
+
+  res.status(200).json(new ApiResponse(200, careers, "All careers fetched"));
+});
+
+// @desc    Create a new job posting
+// @route   POST /api/careers
+// @access  Private (Admin)
+export const createCareer = catchAsync(async (req, res) => {
+  const {
+    title,
+    type,
+    location,
+    department,
+    description,
+    responsibilities,
+    qualifications,
+    benefits,
+    salaryMin,
+    salaryMax,
+    salaryType,
+    applicationDeadline,
+    accentColor,
+    prescreenQuestions,
+  } = req.body;
+
+  if (!title || !type || !location || !department || !description) {
+    throw new ApiError(
+      400,
+      "Title, type, location, department, and description are required",
+    );
+  }
+
+  const career = await Career.create({
+    title,
+    type,
+    location,
+    department,
+    description,
+    responsibilities: responsibilities || [],
+    qualifications: qualifications || [],
+    benefits: benefits || [],
+    salaryMin: salaryMin || null,
+    salaryMax: salaryMax || null,
+    salaryType: salaryType || "yearly",
+    applicationDeadline: applicationDeadline || null,
+    accentColor: accentColor || "#14b8a6",
+    prescreenQuestions: prescreenQuestions || [], // ← include on create
+  });
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, career, "Job posting created successfully"));
+});
+
+// @desc    Update an existing job posting
+// @route   PUT /api/careers/:id
+// @access  Private (Admin)
+export const updateCareer = catchAsync(async (req, res) => {
+  const career = await Career.findById(req.params.id);
+
+  if (!career) {
+    throw new ApiError(404, "Job posting not found");
+  }
+
+  const allowedFields = [
+    "title",
+    "type",
+    "location",
+    "department",
+    "description",
+    "responsibilities",
+    "qualifications",
+    "benefits",
+    "salaryMin",
+    "salaryMax",
+    "salaryType",
+    "applicationDeadline",
+    "accentColor",
+    "isActive",
+    "prescreenQuestions", // ← THIS WAS THE BUG — now included
+  ];
+
+  allowedFields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      career[field] = req.body[field];
+    }
+  });
+
+  await career.save();
+
+  // Return populated so the frontend modal refreshes correctly
+  const updated = await Career.findById(career._id).populate(
+    "prescreenQuestions",
+  );
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, updated, "Job posting updated successfully"));
+});
+
+// @desc    Soft-delete a job posting (set isActive to false)
+// @route   DELETE /api/careers/:id
+// @access  Private (Admin)
+export const deleteCareer = catchAsync(async (req, res) => {
+  const career = await Career.findById(req.params.id);
+
+  if (!career) {
+    throw new ApiError(404, "Job posting not found");
+  }
+
+  career.isActive = false;
+  await career.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Job posting deactivated successfully"));
+});
+
+// @desc    Get unique departments for filtering
+// @route   GET /api/careers/departments
+// @access  Public
+export const getDepartments = catchAsync(async (req, res) => {
+  const departments = await Career.distinct("department", { isActive: true });
+  res
+    .status(200)
+    .json(new ApiResponse(200, departments, "Departments fetched"));
+});
+</file>
+
+<file path="src/models/Career.js">
+// src/models/Career.js
+import mongoose from "mongoose";
+
+/**
+ * Each job posting can reference up to 5 prescreen questions
+ * from the global PrescreenQuestion bank.
+ * The order array controls display order.
+ */
+const careerSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ["Full-time", "Part-time", "Contract", "Per Diem", "Internship"],
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    department: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    responsibilities: {
+      type: [String],
+      default: [],
+    },
+    qualifications: {
+      type: [String],
+      default: [],
+    },
+    benefits: {
+      type: [String],
+      default: [],
+    },
+    salaryMin: {
+      type: Number,
+      default: null,
+    },
+    salaryMax: {
+      type: Number,
+      default: null,
+    },
+    salaryType: {
+      type: String,
+      enum: ["hourly", "yearly"],
+      default: "yearly",
+    },
+    applicationDeadline: {
+      type: Date,
+      default: null,
+    },
+    accentColor: {
+      type: String,
+      default: "#14b8a6",
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
+    // ─── Prescreen Questions ─────────────────────────────────────────
+    // References to PrescreenQuestion documents, ordered by position
+    prescreenQuestions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PrescreenQuestion",
+      },
+    ],
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
+);
+
+// Virtual: count of applications for this job
+careerSchema.virtual("applicantCount", {
+  ref: "Application",
+  localField: "_id",
+  foreignField: "job",
+  count: true,
+});
+
+// Auto-generate slug from title before saving
+careerSchema.pre("save", function (next) {
+  if (this.isModified("title")) {
+    this.slug = this.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+  next();
+});
+
+export default mongoose.model("Career", careerSchema);
+</file>
+
+<file path="src/app.js">
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import mongoSanitize from "express-mongo-sanitize";
+import routes from "./routes/index.js";
+
+const app = express();
+
+// ─── CORS ─────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://avighnahc.com",
+  "http://localhost:5174",
+  "https://avighna-self.vercel.app",
+];
+
+// ─── Security Headers ─────────────────────────────────────────────────
+app.use(helmet());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
+
+// ─── Rate Limiters ────────────────────────────────────────────────────
+
+// Strict limiter for login — 10 attempts per 15 minutes per IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    status: "error",
+    message: "Too many login attempts. Please try again in 15 minutes.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// General limiter for public POST routes (contact, reviews, applications)
+const publicPostLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: {
+    status: "error",
+    message: "Too many requests. Please slow down and try again.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply auth limiter to login route only
+app.use("/api/auth/login", authLimiter);
+
+// Apply public post limiter to submission routes
+app.use("/api/inquiries", publicPostLimiter);
+app.use("/api/reviews", publicPostLimiter);
+app.use("/api/applications", publicPostLimiter);
+
+// ─── Body Parsing ─────────────────────────────────────────────────────
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ─── NoSQL Injection Sanitization ────────────────────────────────────
+// Strips $ and . from req.body, req.params, req.query
+// Prevents attacks like: { "email": { "$gt": "" } }
+app.use(mongoSanitize());
+
+// ─── HTTP Logger ──────────────────────────────────────────────────────
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+// ─── Health Check ─────────────────────────────────────────────────────
+app.get("/api/health", (req, res) => {
+  res
+    .status(200)
+    .json({ status: "success", message: "Avighna API is running smoothly." });
+});
+
+// ─── API Routes ───────────────────────────────────────────────────────
+app.use("/api", routes);
+
+// ─── 404 Handler ──────────────────────────────────────────────────────
+app.use((req, res) => {
+  res.status(404).json({ status: "error", message: "Route not found" });
+});
+
+// ─── Global Error Handler ─────────────────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.statusCode || err.status || 500).json({
+    status: "error",
+    message: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
+});
+
+export default app;
+</file>
+
+</files>
