@@ -1,8 +1,9 @@
-import transporter from "../config/nodemailer.config.js";
+import { sendMail } from "./mail.service.js";
 
 const FROM_NAME = "Avighna Holistic Care";
-const FROM_EMAIL = process.env.SMTP_FROM || process.env.SMTP_USER;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+const CAREERS_EMAIL =
+  process.env.CAREERS_EMAIL || process.env.SMTP_FROM || "careers@avighnahc.com";
+const FROM_EMAIL = CAREERS_EMAIL;
 
 // ─── Base HTML wrapper ───────────────────────────────────────────────
 const wrapHtml = (body) => `
@@ -85,7 +86,7 @@ export const sendApplicationReceived = async ({
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Application Received — ${jobTitle} | Avighna Holistic Care`,
@@ -128,9 +129,9 @@ export const sendAdminNewApplication = async ({
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
-    to: ADMIN_EMAIL,
+    to: CAREERS_EMAIL,
     subject: `New Application: ${applicantName} → ${jobTitle}`,
     html,
   });
@@ -158,7 +159,7 @@ export const sendStatusReviewing = async ({ to, applicantName, jobTitle }) => {
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Update: Your Application is Under Review — ${jobTitle}`,
@@ -228,11 +229,11 @@ export const sendStatusInterviewing = async ({
     }
     <p style="margin:0;color:#666;font-size:15px;line-height:1.7;">
       If you have any questions or need to reschedule, please don't hesitate to reach out
-      at <a href="mailto:${ADMIN_EMAIL}" style="color:#14b8a6;">${ADMIN_EMAIL}</a>.
+      at <a href="mailto:${CAREERS_EMAIL}" style="color:#14b8a6;">${CAREERS_EMAIL}</a>.
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Interview Invitation — ${jobTitle} | Avighna Holistic Care`,
@@ -270,7 +271,7 @@ export const sendStatusAccepted = async ({ to, applicantName, jobTitle }) => {
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Offer Extended — ${jobTitle} | Avighna Holistic Care`,
@@ -315,7 +316,7 @@ export const sendStatusRejected = async ({ to, applicantName, jobTitle }) => {
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Application Update — ${jobTitle} | Avighna Holistic Care`,
@@ -352,7 +353,7 @@ export const sendResumeExpiryNotice = async ({
     </p>
   `);
 
-  return transporter.sendMail({
+  return sendMail({
     from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
     to,
     subject: `Your Resume Has Been Removed — Avighna Holistic Care`,

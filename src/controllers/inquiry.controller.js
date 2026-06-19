@@ -2,6 +2,7 @@ import Inquiry from "../models/Inquiry.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { sendInquiryEmails } from "../services/email.service.js";
 
 // @desc    Create new inquiry from Contact Page
 // @route   POST /api/inquiries
@@ -11,7 +12,8 @@ export const createInquiry = async (req, res) => {
     const {
       firstName,
       lastName,
-      email,
+      email: bodyEmail,
+      emailAddress,
       phone,
       patientStatus,
       contactReason,
@@ -20,6 +22,17 @@ export const createInquiry = async (req, res) => {
       message,
       permissionGranted,
     } = req.body;
+
+    const email = String(bodyEmail || emailAddress || "")
+      .trim()
+      .toLowerCase();
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid email address is required.",
+      });
+    }
 
     if (!permissionGranted) {
       return res.status(400).json({
@@ -40,6 +53,8 @@ export const createInquiry = async (req, res) => {
       message,
       permissionGranted,
     });
+
+    await sendInquiryEmails(newInquiry);
 
     res.status(201).json({
       success: true,
