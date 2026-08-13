@@ -16,7 +16,12 @@ import crypto from "crypto";
  */
 export const uploadFileToS3 = async (file, folder = "misc") => {
   const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
-  const key = `${folder}/${uniqueSuffix}-${file.originalname}`;
+  // Sanitize the original filename so the resulting S3 URL is always a valid URI
+  // (spaces, parentheses, and other unsafe characters break URL validation).
+  const safeName = (file.originalname || "file")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9._-]/g, "");
+  const key = `${folder}/${uniqueSuffix}-${safeName}`;
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
@@ -53,6 +58,26 @@ export const deleteFileFromS3 = async (key) => {
     console.error(`❌ S3 Delete Error for key "${key}":`, error.message);
     return false;
   }
+};
+
+/**
+ * Fetch an object from S3 for streaming through the backend.
+ * @param {string} key - The S3 object key
+ * @returns {Object} { body, contentType, contentLength } - body is a Readable stream
+ */
+export const getFileObject = async (key) => {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: key,
+  });
+
+  const response = await s3Client.send(command);
+
+  return {
+    body: response.Body,
+    contentType: response.ContentType,
+    contentLength: response.ContentLength,
+  };
 };
 
 /**

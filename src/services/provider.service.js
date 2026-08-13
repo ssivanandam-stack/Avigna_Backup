@@ -3,10 +3,10 @@ import Provider from "../models/Provider.js";
 import { ApiError } from "../utils/ApiError.js";
 
 const PUBLIC_LIST_FIELDS =
-  "displayName credentials designation specialty shortBio profileImageUrl location yearsOfExperience languages isFeatured displayOrder";
+  "displayName credentials designation specialty section shortBio profileImageUrl location yearsOfExperience languages isFeatured displayOrder";
 
 const PUBLIC_DETAIL_FIELDS =
-  "firstName lastName displayName credentials designation specialty shortBio fullBio profileImageUrl email phone location yearsOfExperience languages isFeatured displayOrder createdAt updatedAt";
+  "firstName lastName displayName credentials designation specialty section shortBio fullBio profileImageUrl email phone location yearsOfExperience languages isFeatured displayOrder createdAt updatedAt";
 
 const toPublicProvider = (provider) => {
   return provider.toJSON ? provider.toJSON() : provider;

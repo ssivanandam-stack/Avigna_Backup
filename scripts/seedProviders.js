@@ -12,6 +12,7 @@ const seedProviders = [
     credentials: "LCMHC",
     designation: "Licensed Clinical Mental Health Counselor",
     specialty: "Child & Adolescent Therapy",
+    section: "Therapists",
     shortBio:
       "Compassionate clinician specializing in children, adolescents, and family support.",
     fullBio:
@@ -33,6 +34,7 @@ const seedProviders = [
     credentials: "LCMHC",
     designation: "Licensed Clinical Mental Health Counselor",
     specialty: "Anxiety, Depression & Trauma",
+    section: "Therapists",
     shortBio:
       "Dedicated therapist helping adults navigate anxiety, depression, and life transitions.",
     fullBio:
@@ -54,6 +56,7 @@ const seedProviders = [
     credentials: "PMHNP-BC",
     designation: "Psychiatric Mental Health Nurse Practitioner",
     specialty: "Medication Management",
+    section: "Administration",
     shortBio:
       "Board-certified PMHNP providing thoughtful psychiatric evaluation and medication management.",
     fullBio:

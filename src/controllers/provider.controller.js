@@ -1,6 +1,8 @@
 import { catchAsync } from "../utils/catchAsync.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 import * as providerService from "../services/provider.service.js";
+import { uploadFileToS3, getFileObject } from "../services/s3.service.js";
 
 // ─── PUBLIC ──────────────────────────────────────────────────────────
 
@@ -24,6 +26,40 @@ export const getProviderById = catchAsync(async (req, res) => {
   res.status(200).json(
     new ApiResponse(200, provider, "Provider fetched successfully"),
   );
+});
+
+// @desc    Serve an uploaded provider image by streaming it from S3
+// @route   GET /api/providers/image?key=providers/...
+// @access  Public
+export const getProviderImage = catchAsync(async (req, res) => {
+  const { key } = req.query;
+
+  // Only allow keys within the providers/ prefix so this cannot be abused
+  // to read private objects (e.g. resumes/).
+  if (!key || typeof key !== "string" || !key.startsWith("providers/")) {
+    throw new ApiError(400, "Invalid image key");
+  }
+
+  let file;
+  try {
+    file = await getFileObject(key);
+  } catch (err) {
+    throw new ApiError(404, "Image not found");
+  }
+
+  // Helmet defaults to Cross-Origin-Resource-Policy: same-origin, which
+  // blocks <img> tags on the frontend (different origin/port) from showing
+  // the image even when this endpoint returns 200.
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader(
+    "Content-Type",
+    file.contentType || "application/octet-stream",
+  );
+  res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+
+  const bytes = await file.body.transformToByteArray();
+  res.setHeader("Content-Length", bytes.byteLength);
+  res.end(Buffer.from(bytes));
 });
 
 // ─── ADMIN ───────────────────────────────────────────────────────────
@@ -73,6 +109,21 @@ export const deleteProvider = catchAsync(async (req, res) => {
 
   res.status(200).json(
     new ApiResponse(200, provider, "Provider deleted successfully"),
+  );
+});
+
+// @desc    Upload a provider profile image
+// @route   POST /api/admin/providers/upload-image
+// @access  Private/Admin
+export const uploadProviderImage = catchAsync(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, "No image file provided");
+  }
+
+  const { url, key } = await uploadFileToS3(req.file, "providers");
+
+  res.status(201).json(
+    new ApiResponse(201, { url, key }, "Image uploaded successfully"),
   );
 });
 

@@ -32,6 +32,11 @@ const providerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    section: {
+      type: String,
+      trim: true,
+      default: "Therapists",
+    },
     shortBio: {
       type: String,
       trim: true,
@@ -105,7 +110,7 @@ const providerSchema = new mongoose.Schema(
   },
 );
 
-providerSchema.index({ status: 1, isDeleted: 1, displayOrder: 1 });
+providerSchema.index({ status: 1, isDeleted: 1, section: 1, displayOrder: 1 });
 providerSchema.index({ isDeleted: 1, displayOrder: 1 });
 
 export default mongoose.model("Provider", providerSchema);
