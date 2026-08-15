@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 transporter.verify((error) => {
   if (error) {
     console.warn("⚠️  SMTP connection failed:", error.message);
-    console.warn("   Career emails will not be sent until SMTP is configured.");
+    console.warn("   Emails will not be sent until SMTP or Microsoft Graph is configured.");
   } else {
     console.log("✅ SMTP mail server connected & ready");
   }

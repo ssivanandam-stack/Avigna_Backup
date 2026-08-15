@@ -18,7 +18,12 @@ const allowedOrigins = [
 ];
 
 // ─── Security Headers ─────────────────────────────────────────────────
-app.use(helmet());
+app.use(
+  helmet({
+    // Allow the frontend (different origin) to display images served by this API.
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 app.use(
   cors({
     origin: function (origin, callback) {

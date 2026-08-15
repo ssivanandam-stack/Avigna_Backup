@@ -9,6 +9,8 @@ import careerRoutes from "./career.routes.js";
 import resourceRoutes from "./resource.routes.js";
 import applicationRoutes from "./application.routes.js";
 import prescreenRoutes from "./prescreen.routes.js"; // ← ADD THIS
+import providerRoutes from "./provider.routes.js";
+import adminProviderRoutes from "./admin.provider.routes.js";
 
 const router = express.Router();
 
@@ -21,5 +23,7 @@ router.use("/careers", careerRoutes);
 router.use("/resources", resourceRoutes);
 router.use("/applications", applicationRoutes);
 router.use("/prescreen", prescreenRoutes); // ← ADD THIS
+router.use("/providers", providerRoutes);
+router.use("/admin/providers", adminProviderRoutes);
 
 export default router;
