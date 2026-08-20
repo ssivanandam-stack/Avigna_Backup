@@ -8,7 +8,7 @@ const providerFields = {
   designation: Joi.string().trim().min(2).max(200),
   specialty: Joi.string().trim().min(2).max(200),
   section: Joi.string().trim().allow("").max(100),
-  shortBio: Joi.string().trim().allow("").max(500),
+  shortBio: Joi.string().trim().allow("").max(1500),
   fullBio: Joi.string().trim().allow("").max(5000),
   profileImageUrl: Joi.alternatives().try(
     Joi.string().uri(),
