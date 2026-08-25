@@ -1,6 +1,8 @@
 import Blog from "../models/Blog.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadFileToS3, getFileObject } from "../services/s3.service.js";
 
 // @desc    Create a new blog post
 // @route   POST /api/blogs
@@ -43,6 +45,50 @@ export const getBlogs = catchAsync(async (req, res) => {
     results: blogs.length,
     data: blogs,
   });
+});
+
+// @desc    Serve an uploaded blog image by streaming it from S3
+// @route   GET /api/blogs/image?key=blogs/...
+// @access  Public
+export const getBlogImage = catchAsync(async (req, res) => {
+  const { key } = req.query;
+
+  if (!key || typeof key !== "string" || !key.startsWith("blogs/")) {
+    throw new ApiError(400, "Invalid image key");
+  }
+
+  let file;
+  try {
+    file = await getFileObject(key);
+  } catch (err) {
+    throw new ApiError(404, "Image not found");
+  }
+
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  res.setHeader(
+    "Content-Type",
+    file.contentType || "application/octet-stream",
+  );
+  res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+
+  const bytes = await file.body.transformToByteArray();
+  res.setHeader("Content-Length", bytes.byteLength);
+  res.end(Buffer.from(bytes));
+});
+
+// @desc    Upload a blog image (cover or inline editor image)
+// @route   POST /api/blogs/upload-image
+// @access  Private/Admin
+export const uploadBlogImage = catchAsync(async (req, res) => {
+  if (!req.file) {
+    throw new ApiError(400, "No image file provided");
+  }
+
+  const { url, key } = await uploadFileToS3(req.file, "blogs");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, { url, key }, "Image uploaded successfully"));
 });
 
 // @desc    Get a single blog by its URL slug
