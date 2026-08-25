@@ -11,6 +11,8 @@ import applicationRoutes from "./application.routes.js";
 import prescreenRoutes from "./prescreen.routes.js"; // ← ADD THIS
 import providerRoutes from "./provider.routes.js";
 import adminProviderRoutes from "./admin.provider.routes.js";
+import employeeLinkRoutes from "./employeeLink.routes.js";
+import serviceRoutes from "./service.routes.js";
 
 const router = express.Router();
 
@@ -25,5 +27,7 @@ router.use("/applications", applicationRoutes);
 router.use("/prescreen", prescreenRoutes); // ← ADD THIS
 router.use("/providers", providerRoutes);
 router.use("/admin/providers", adminProviderRoutes);
+router.use("/employee-links", employeeLinkRoutes);
+router.use("/services", serviceRoutes);
 
 export default router;
