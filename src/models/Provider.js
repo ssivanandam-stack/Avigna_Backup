@@ -41,11 +41,19 @@ const providerSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
+      maxlength: 1000,
     },
     fullBio: {
       type: String,
       trim: true,
       default: "",
+      maxlength: 1000,
+    },
+    longBio: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 1500,
     },
     profileImageUrl: {
       type: String,
