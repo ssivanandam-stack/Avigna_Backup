@@ -64,8 +64,9 @@ const applicationSchema = new mongoose.Schema(
     coverLetter: { type: String, default: "" },
 
     // ─── Resume (S3) ────────────────────────────────────────────────
-    resumeUrl: { type: String, required: true },
-    resumeS3Key: { type: String, required: true },
+    // resumeUrl / resumeS3Key may be cleared after retention expiry cleanup
+    resumeUrl: { type: String, default: "" },
+    resumeS3Key: { type: String, default: "" },
     resumeDeleted: { type: Boolean, default: false },
     resumeExpiresAt: { type: Date, required: true },
 
