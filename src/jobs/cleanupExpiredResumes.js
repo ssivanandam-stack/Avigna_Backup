@@ -15,11 +15,11 @@ import {
  *   - resumeDeleted is still false
  *
  * For each expired application:
- *   1. Delete resume from S3
- *   2. If status is still "applied" or "reviewing" (never got a decision),
+ *   1. If status is still "applied" or "reviewing" (never got a decision),
  *      send polite rejection email first
- *   3. Send data retention / resume expiry notice
- *   4. Mark resumeDeleted = true
+ *   2. Send data retention / resume expiry notice
+ *   3. Delete resume from S3
+ *   4. Mark resumeDeleted = true (always, even if S3/email fails)
  */
 const startResumeCleanupJob = () => {
   // Run every day at 2:00 AM server time
@@ -59,7 +59,6 @@ const startResumeCleanupJob = () => {
               });
               emailsSent++;
 
-              // Update status to rejected
               app.status = "rejected";
               app.statusHistory.push({
                 status: "rejected",
@@ -74,7 +73,7 @@ const startResumeCleanupJob = () => {
             }
           }
 
-          // Send resume expiry notice
+          // Send resume expiry notice (only once — we mark deleted below either way)
           try {
             await sendResumeExpiryNotice({
               to: app.email,
@@ -89,12 +88,21 @@ const startResumeCleanupJob = () => {
             );
           }
 
-          // Delete resume from S3
-          const deleted = await deleteFileFromS3(app.resumeS3Key);
+          // Delete resume from S3 (non-fatal)
+          let deleted = false;
+          try {
+            deleted = await deleteFileFromS3(app.resumeS3Key);
+          } catch (s3Err) {
+            console.error(
+              `  ⚠️  S3 delete failed for ${app.email}:`,
+              s3Err.message,
+            );
+          }
 
-          // Mark as deleted regardless (we don't want to keep retrying)
+          // Always mark deleted so the cron does not re-email every day
           app.resumeDeleted = true;
-          app.resumeUrl = ""; // Clear the URL since it's no longer valid
+          app.resumeUrl = "";
+          app.resumeS3Key = "";
           await app.save();
 
           if (deleted) deletedCount++;
@@ -105,6 +113,28 @@ const startResumeCleanupJob = () => {
             `  ❌ Error processing application ${app._id}:`,
             appErr.message,
           );
+
+          // Last resort: force-mark deleted so daily emails cannot loop
+          try {
+            await Application.updateOne(
+              { _id: app._id },
+              {
+                $set: {
+                  resumeDeleted: true,
+                  resumeUrl: "",
+                  resumeS3Key: "",
+                },
+              },
+            );
+            console.log(
+              `  🔒 Force-marked resumeDeleted for application ${app._id}`,
+            );
+          } catch (forceErr) {
+            console.error(
+              `  ❌ Failed to force-mark application ${app._id}:`,
+              forceErr.message,
+            );
+          }
         }
       }
 
