@@ -31,6 +31,7 @@ const providerSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 4000,
     },
     section: {
       type: String,
@@ -41,13 +42,13 @@ const providerSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: "",
-      maxlength: 1000,
+      maxlength: 1500,
     },
     fullBio: {
       type: String,
       trim: true,
       default: "",
-      maxlength: 1000,
+      maxlength: 1500,
     },
     longBio: {
       type: String,
@@ -84,6 +85,14 @@ const providerSchema = new mongoose.Schema(
     languages: {
       type: [String],
       default: [],
+    },
+    populationsServed: {
+      type: [String],
+      default: [],
+    },
+    acceptingNewClients: {
+      type: Boolean,
+      default: true,
     },
     displayOrder: {
       type: Number,
