@@ -6,21 +6,24 @@ import startResumeCleanupJob from "./jobs/cleanupExpiredResumes.js";
 // Load env vars
 dotenv.config();
 
-// Connect to Database
-connectDB();
-
-// Start scheduled jobs
-startResumeCleanupJob();
-
 const PORT = process.env.PORT || 5001;
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
+const startServer = async () => {
+  // Wait for MongoDB before accepting traffic (avoids mongoose buffering timeouts)
+  await connectDB();
 
-// Handle unhandled promise rejections (e.g., sudden DB drop)
-process.on("unhandledRejection", (err, promise) => {
-  console.error(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
-});
+  startResumeCleanupJob();
+
+  const server = app.listen(PORT, () => {
+    console.log(
+      `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`,
+    );
+  });
+
+  process.on("unhandledRejection", (err) => {
+    console.error(`Error: ${err.message}`);
+    server.close(() => process.exit(1));
+  });
+};
+
+startServer();
