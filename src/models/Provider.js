@@ -86,6 +86,10 @@ const providerSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    spokenLanguages: {
+      type: [String],
+      default: [],
+    },
     populationsServed: {
       type: [String],
       default: [],
