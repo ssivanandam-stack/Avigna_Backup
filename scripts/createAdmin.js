@@ -37,6 +37,7 @@ const createAdmin = async () => {
     name: "Avighna Admin",
     email: process.env.ADMIN_EMAIL,
     password: hashedPassword,
+    isActive: true,
   });
 
   console.log("✅ Admin user created successfully!");

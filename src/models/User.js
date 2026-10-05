@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false, // Don't return passwords by default in queries
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 );
