@@ -27,6 +27,9 @@ export const protect = catchAsync(async (req, res, next) => {
       "The user belonging to this token no longer exists.",
     );
 
+  if (currentUser.isActive === false)
+    throw new ApiError(401, "This admin account has been deactivated");
+
   req.user = currentUser;
   next();
 });

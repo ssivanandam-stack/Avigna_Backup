@@ -17,11 +17,21 @@ export const loginAdmin = catchAsync(async (req, res, next) => {
     throw new ApiError(401, "Incorrect email or password");
   }
 
+  if (user.isActive === false) {
+    throw new ApiError(401, "This admin account has been deactivated");
+  }
+
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
   res
     .status(200)
-    .json(new ApiResponse(200, { token, name: user.name }, "Login successful"));
+    .json(
+      new ApiResponse(
+        200,
+        { token, name: user.name, email: user.email },
+        "Login successful",
+      ),
+    );
 });

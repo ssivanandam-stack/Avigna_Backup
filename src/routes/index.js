@@ -15,10 +15,12 @@ import employeeLinkRoutes from "./employeeLink.routes.js";
 import serviceRoutes from "./service.routes.js";
 import insuranceLogoRoutes from "./insuranceLogo.routes.js";
 import conditionRoutes from "./condition.routes.js";
+import adminUserRoutes from "./admin.user.routes.js";
 
 const router = express.Router();
 
 router.use("/auth", authRoutes);
+router.use("/admin/users", adminUserRoutes);
 router.use("/inquiries", inquiryRoutes);
 router.use("/reviews", reviewRoutes);
 router.use("/blogs", blogRoutes);
