@@ -14,8 +14,29 @@ const slugify = (title = "") =>
 /** Seed existing site services once if the collection is empty. */
 export const ensureDefaultServices = async () => {
   const count = await Service.countDocuments();
-  if (count > 0) return;
-  await Service.insertMany(DEFAULT_SERVICES);
+  if (count === 0) {
+    await Service.insertMany(DEFAULT_SERVICES);
+    return;
+  }
+
+  // One-time backfill: Assessment page gets specialized programs if missing.
+  const assessmentDefault = DEFAULT_SERVICES.find((s) => s.slug === "assessment");
+  if (!assessmentDefault?.programs?.length) return;
+
+  await Service.updateOne(
+    {
+      slug: "assessment",
+      $or: [{ programs: { $exists: false } }, { programs: { $size: 0 } }],
+    },
+    {
+      $set: {
+        templateType: "specialized",
+        specializedHeading: assessmentDefault.specializedHeading,
+        specializedIntro: assessmentDefault.specializedIntro,
+        programs: assessmentDefault.programs,
+      },
+    },
+  );
 };
 
 // @desc    Get active services (public nav + listing)

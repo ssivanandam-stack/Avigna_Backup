@@ -7,13 +7,17 @@ export const DEFAULT_SERVICES = [
     slug: "assessment",
     title: "Clinical Assessment",
     section: "Comprehensive Therapy",
+    templateType: "specialized",
     displayOrder: 0,
     isActive: true,
     showInNav: true,
     accent: "#14b8a6",
     image: "/image/image3.webp",
     intro:
-      "A comprehensive assessment is the foundational step in your mental health journey. At Avighna Holistic Care, our expert clinicians conduct thorough evaluations to accurately diagnose and understand your unique psychological, emotional, and behavioral needs. This deep understanding allows us to craft a highly personalized and effective treatment plan tailored just for you.",
+      "At Avighna Holistic Care, our Clinical Assessment services provide the clarity you need to move forward with confidence. Our licensed clinicians take a thorough, personalized approach — going beyond symptom checklists to understand the full picture of your mental health. If you're struggling, you don't have to do it alone — contact Avighna Holistic Care today to schedule an appointment.",
+    specializedHeading: "Specialized Programs",
+    specializedIntro:
+      "Targeted evaluations and documentation services for ADHD and emotional support animals — available now.",
     qa: [
       {
         question: "What is a Clinical Assessment?",
@@ -36,11 +40,118 @@ export const DEFAULT_SERVICES = [
           "The insights gathered from your assessment allow us to recommend the most effective therapeutic modalities, whether that involves individual therapy, medication management, or intensive outpatient programs. It ensures that we aren't just treating symptoms, but addressing the root causes of your distress.",
       },
     ],
+    programs: [
+      {
+        tabName: "ADHD Assessment",
+        title: "ADHD Assessments",
+        icon: "brain",
+        accentColor: "#ff5c00",
+        about:
+          "Difficulty with focus, organization, impulsivity, forgetfulness, or follow-through can affect school, work, and daily life. An ADHD assessment can help clarify whether these symptoms are related to ADHD or another concern such as anxiety, depression, trauma, sleep issues, or learning challenges.\n\nAt Avighna Holistic Care, our ADHD assessments are designed to provide a clear, thoughtful evaluation rather than relying on a checklist alone. We review symptoms, history, functioning across settings, and other factors that may affect attention so we can make accurate recommendations for treatment, support, and next steps.",
+        whoItHelps: [
+          "Children and teens struggling with attention, school performance, impulsivity, or behavior.",
+          "Adults dealing with chronic distractibility, disorganization, procrastination, time management problems, or workplace difficulties.",
+          "Individuals who want diagnostic clarification before starting treatment or requesting school or workplace support.",
+        ],
+        whatsIncluded: [
+          "Comprehensive clinical interview",
+          "Review of symptoms at home, school, work, and daily life",
+          "Standardized rating scales and screening tools",
+          "Review of emotional, behavioral, academic, and medical history",
+          "Diagnostic impressions and treatment recommendations",
+          "Written documentation or report, if needed",
+        ],
+        pricing: [
+          {
+            label: "ADHD diagnostic consultation / screening visit",
+            price: "$225–$300",
+            note: "self-pay",
+          },
+          {
+            label: "Comprehensive ADHD assessment with written report",
+            price: "$650–$900",
+            note: "self-pay",
+          },
+          {
+            label: "School/work accommodation letter add-on",
+            price: "$75–$150",
+            note: "self-pay",
+          },
+        ],
+        image: "/image/image23.webp",
+        qa: [
+          {
+            question: "What does an ADHD assessment include?",
+            answer:
+              "Our ADHD assessments include a comprehensive clinical interview, review of symptoms across settings, standardized rating scales, history review, diagnostic impressions, and written documentation when needed.",
+          },
+          {
+            question: "Is the ADHD assessment only for children?",
+            answer:
+              "No. We evaluate children, teens, and adults who struggle with attention, organization, impulsivity, or related concerns at school, work, or in daily life.",
+          },
+        ],
+        ctaLabel: "Schedule an Evaluation",
+        ctaUrl: "/contact",
+        displayOrder: 0,
+        isActive: true,
+      },
+      {
+        tabName: "Animal Support",
+        title: "Emotional Support Animal Letters",
+        icon: "heart",
+        accentColor: "#14b8a6",
+        about:
+          "For some individuals living with anxiety, depression, PTSD, or other mental health conditions, an emotional support animal may provide comfort and help reduce the impact of symptoms in daily life.\n\nAt Avighna Holistic Care, we offer emotional support animal evaluations in Raleigh, NC to determine whether an Emotional Support Animal (ESA) is clinically appropriate based on your mental health needs and treatment history.\n\nAn ESA letter is not automatic and is only provided when a licensed clinician determines that it is medically appropriate. Our evaluation process is designed to meet ethical and housing-related documentation standards by assessing your symptoms, level of impairment, and the therapeutic role the animal serves.",
+        whoItHelps: [
+          "Individuals with anxiety, depression, trauma-related symptoms, or other qualifying mental health concerns.",
+          "Current or prospective housing tenants requesting a reasonable accommodation for an emotional support animal.",
+          "Patients seeking evaluation from a licensed mental health professional who can assess whether ESA documentation is appropriate.",
+        ],
+        whatsIncluded: [
+          "Clinical evaluation with a licensed mental health provider",
+          "Review of symptoms, diagnosis, and current functioning",
+          "Discussion of housing-related need and whether an ESA is clinically appropriate",
+          "Written ESA letter when supported by the evaluation",
+          "Guidance on documentation for housing accommodation requests",
+        ],
+        pricing: [
+          {
+            label: "ESA evaluation with letter, if clinically appropriate",
+            price: "$200–$275",
+            note: "self-pay",
+          },
+          {
+            label: "Follow-up renewal or updated letter",
+            price: "$75–$150",
+            note: "self-pay",
+          },
+        ],
+        image: "/image/image22.webp",
+        qa: [
+          {
+            question: "Is an ESA letter guaranteed?",
+            answer:
+              "No. An ESA letter is only provided when a licensed clinician determines it is clinically appropriate based on your evaluation.",
+          },
+          {
+            question: "Who can request an ESA evaluation?",
+            answer:
+              "Individuals with qualifying mental health concerns who may need housing-related documentation for an emotional support animal can request an evaluation.",
+          },
+        ],
+        ctaLabel: "Schedule an Evaluation",
+        ctaUrl: "/contact",
+        displayOrder: 1,
+        isActive: true,
+      },
+    ],
   },
   {
     slug: "outpatient",
     title: "Outpatient Therapy",
     section: "Comprehensive Therapy",
+    templateType: "standard",
     displayOrder: 1,
     isActive: true,
     showInNav: true,
@@ -75,6 +186,7 @@ export const DEFAULT_SERVICES = [
     slug: "school-based",
     title: "School Based Therapy",
     section: "Comprehensive Therapy",
+    templateType: "standard",
     displayOrder: 2,
     isActive: true,
     showInNav: true,
@@ -109,6 +221,7 @@ export const DEFAULT_SERVICES = [
     slug: "holistic",
     title: "Holistic Care",
     section: "Specialized Programs",
+    templateType: "standard",
     displayOrder: 3,
     isActive: true,
     showInNav: true,

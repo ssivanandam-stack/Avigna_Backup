@@ -8,6 +8,45 @@ const qaSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const pricingSchema = new mongoose.Schema(
+  {
+    label: { type: String, required: true, trim: true, maxlength: 300 },
+    price: { type: String, required: true, trim: true, maxlength: 80 },
+    note: { type: String, trim: true, default: "self-pay", maxlength: 80 },
+  },
+  { _id: false },
+);
+
+const programSchema = new mongoose.Schema(
+  {
+    tabName: { type: String, required: true, trim: true, maxlength: 120 },
+    title: { type: String, required: true, trim: true, maxlength: 200 },
+    icon: {
+      type: String,
+      trim: true,
+      default: "brain",
+      enum: ["brain", "heart", "clipboard", "stethoscope", "users"],
+    },
+    accentColor: { type: String, trim: true, default: "#ff5c00", maxlength: 30 },
+    about: { type: String, trim: true, default: "", maxlength: 8000 },
+    whoItHelps: { type: [String], default: [] },
+    whatsIncluded: { type: [String], default: [] },
+    pricing: { type: [pricingSchema], default: [] },
+    image: { type: String, trim: true, default: "", maxlength: 2000 },
+    qa: { type: [qaSchema], default: [] },
+    ctaLabel: {
+      type: String,
+      trim: true,
+      default: "Schedule an Evaluation",
+      maxlength: 120,
+    },
+    ctaUrl: { type: String, trim: true, default: "/contact", maxlength: 500 },
+    displayOrder: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
+  },
+  { _id: true },
+);
+
 const serviceSchema = new mongoose.Schema(
   {
     slug: {
@@ -30,6 +69,11 @@ const serviceSchema = new mongoose.Schema(
       trim: true,
       maxlength: 120,
       default: "Comprehensive Therapy",
+    },
+    templateType: {
+      type: String,
+      enum: ["standard", "specialized"],
+      default: "standard",
     },
     displayOrder: {
       type: Number,
@@ -61,8 +105,24 @@ const serviceSchema = new mongoose.Schema(
       default: "",
       maxlength: 5000,
     },
+    specializedHeading: {
+      type: String,
+      trim: true,
+      default: "Specialized Programs",
+      maxlength: 200,
+    },
+    specializedIntro: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 2000,
+    },
     qa: {
       type: [qaSchema],
+      default: [],
+    },
+    programs: {
+      type: [programSchema],
       default: [],
     },
   },
