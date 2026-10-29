@@ -16,6 +16,7 @@ import serviceRoutes from "./service.routes.js";
 import insuranceLogoRoutes from "./insuranceLogo.routes.js";
 import conditionRoutes from "./condition.routes.js";
 import adminUserRoutes from "./admin.user.routes.js";
+import pageSettingRoutes from "./pageSetting.routes.js";
 
 const router = express.Router();
 
@@ -35,5 +36,6 @@ router.use("/employee-links", employeeLinkRoutes);
 router.use("/services", serviceRoutes);
 router.use("/insurance-logos", insuranceLogoRoutes);
 router.use("/conditions", conditionRoutes);
+router.use("/page-settings", pageSettingRoutes);
 
 export default router;
